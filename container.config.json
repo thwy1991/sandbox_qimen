@@ -1,0 +1,17 @@
+{
+  "containerName": "qimen-api",
+  "service": {
+    "name": "qimen-api",
+    "description": "奇门遁甲排盘后端API服务"
+  },
+  "port": 80,
+  "cpu": 0.5,
+  "mem": 1024,
+  "minNum": 0,
+  "maxNum": 3,
+  "policyType": "cpu",
+  "policyThreshold": 60,
+  "envParams": {
+    "TZ": "Asia/Shanghai"
+  }
+}

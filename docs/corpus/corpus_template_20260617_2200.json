@@ -1,0 +1,231 @@
+{
+  "id": "qimen_20260617_2200",
+  "datetime": "2026-06-17T22:00:00",
+  "pan": {
+    "chart_info": {
+      "time": "丙午年 甲午月 壬戌日 辛亥时",
+      "jieqi": "芒种",
+      "dun": "阳",
+      "bureau": "阳遁9局",
+      "yuan": "下元",
+      "xun_shou_gan": "壬",
+      "zhi_fu_star": "天辅",
+      "zhi_fu_pos": 4,
+      "zhi_fu_heaven_pos": 3,
+      "zhi_shi_door": "杜门",
+      "zhi_shi_pos": 2,
+      "kong_pair": [
+        "寅",
+        "卯"
+      ],
+      "kong_palaces": [
+        8,
+        3
+      ],
+      "ma_zhi": "巳",
+      "ma_palace": 4
+    },
+    "di_pan": {
+      "9": "戊",
+      "1": "己",
+      "2": "庚",
+      "3": "辛",
+      "4": "壬",
+      "5": "癸",
+      "6": "丁",
+      "7": "丙",
+      "8": "乙"
+    },
+    "earth_jigan": {
+      "2": "癸"
+    },
+    "hv_stems": {
+      "3": "壬",
+      "4": "戊",
+      "9": "庚",
+      "2": "丙",
+      "7": "丁",
+      "6": "己",
+      "1": "乙",
+      "8": "辛",
+      "5": "丙"
+    },
+    "jigan_stems": {
+      "9": "癸"
+    },
+    "hv_stars": {
+      "1": "天任",
+      "2": "天柱",
+      "3": "天辅",
+      "4": "天英",
+      "5": "天柱",
+      "6": "天蓬",
+      "7": "天心",
+      "8": "天冲",
+      "9": "天芮"
+    },
+    "hv_stars_jigan": {
+      "9": "天禽"
+    },
+    "palace_doors": {
+      "2": "杜门",
+      "7": "景门",
+      "6": "死门",
+      "1": "惊门",
+      "8": "开门",
+      "3": "休门",
+      "4": "生门",
+      "9": "伤门",
+      "5": "杜门"
+    },
+    "palace_gods": {
+      "3": "值符",
+      "4": "腾蛇",
+      "9": "太阴",
+      "2": "六合",
+      "7": "白虎",
+      "6": "玄武",
+      "1": "九地",
+      "8": "九天",
+      "5": "六合"
+    },
+    "earth_gods": {
+      "4": "值符",
+      "9": "腾蛇",
+      "2": "太阴",
+      "7": "六合",
+      "6": "白虎",
+      "1": "玄武",
+      "8": "九地",
+      "3": "九天",
+      "5": "太阴"
+    }
+  },
+  "pan_summary": {
+    "dun_type": "阳遁",
+    "bureau_num": 9,
+    "zhi_fu": {
+      "star": "天辅",
+      "origin_palace": 4,
+      "heaven_palace": 3
+    },
+    "zhi_shi": {
+      "door": "杜门",
+      "palace": 2
+    },
+    "kong_palaces": [
+      8,
+      3
+    ],
+    "ma_palace": 4,
+    "palaces": [
+      {
+        "palace": 1,
+        "dir": "坎",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 2,
+        "dir": "坤",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "值使宫"
+      },
+      {
+        "palace": 3,
+        "dir": "震",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡，天盘值符宫"
+      },
+      {
+        "palace": 4,
+        "dir": "巽",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "驿马"
+      },
+      {
+        "palace": 6,
+        "dir": "乾",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 7,
+        "dir": "兑",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 8,
+        "dir": "艮",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡"
+      },
+      {
+        "palace": 9,
+        "dir": "离",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      }
+    ]
+  },
+  "context": {
+    "market": "",
+    "time_range": "",
+    "direction": "",
+    "specific_target": "",
+    "notes": ""
+  },
+  "analysis": "（请填写分析过程）",
+  "outcome": {
+    "predicted": "",
+    "actual": "",
+    "accuracy": "",
+    "key_turning_point": "",
+    "deviation_reason": ""
+  },
+  "insights": "关于本局中，沪镍能否突破4小时均线M20的压制，我觉得应该看杜门，杜门在坤二宫，上临六合，主根据为丙+庚，这是著名的荧惑入太白，贼必退，另外上乘六合有市场合力在起作用，另外看当前时空的丙午年甲午月，大主丙火，所以在今晚的时空中，必然突破；再者时干落艮宫，逢空亡，临开门，孤虚法分析，开门气势大强于杜门；开门临天冲，辛+乙，气势汹汹，综合分析；压力必然被突破。",
+  "tags": [],
+  "rating": 0,
+  "created_at": "2026-06-17T21:31:46"
+}

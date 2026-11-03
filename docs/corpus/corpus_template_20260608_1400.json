@@ -1,0 +1,231 @@
+{
+  "id": "qimen_20260608_1400",
+  "datetime": "2026-06-08T14:00:00",
+  "pan": {
+    "chart_info": {
+      "time": "丙午年 甲午月 癸丑日 己未时",
+      "jieqi": "芒种",
+      "dun": "阳",
+      "bureau": "阳遁6局",
+      "yuan": "上元",
+      "xun_shou_gan": "癸",
+      "zhi_fu_star": "天芮",
+      "zhi_fu_pos": 2,
+      "zhi_fu_heaven_pos": 7,
+      "zhi_shi_door": "死门",
+      "zhi_shi_pos": 7,
+      "kong_pair": [
+        "子",
+        "丑"
+      ],
+      "kong_palaces": [
+        8,
+        1
+      ],
+      "ma_zhi": "巳",
+      "ma_palace": 4
+    },
+    "di_pan": {
+      "6": "戊",
+      "7": "己",
+      "8": "庚",
+      "9": "辛",
+      "1": "壬",
+      "2": "癸",
+      "3": "丁",
+      "4": "丙",
+      "5": "乙"
+    },
+    "earth_jigan": {
+      "2": "乙"
+    },
+    "hv_stems": {
+      "7": "癸",
+      "6": "己",
+      "1": "戊",
+      "8": "壬",
+      "3": "庚",
+      "4": "丁",
+      "9": "丙",
+      "2": "辛",
+      "5": "辛"
+    },
+    "jigan_stems": {
+      "7": "乙"
+    },
+    "hv_stars": {
+      "1": "天心",
+      "2": "天英",
+      "3": "天任",
+      "4": "天冲",
+      "5": "天英",
+      "6": "天柱",
+      "7": "天芮",
+      "8": "天蓬",
+      "9": "天辅"
+    },
+    "hv_stars_jigan": {
+      "7": "天禽"
+    },
+    "palace_doors": {
+      "7": "死门",
+      "6": "惊门",
+      "1": "开门",
+      "8": "休门",
+      "3": "生门",
+      "4": "伤门",
+      "9": "杜门",
+      "2": "景门",
+      "5": "景门"
+    },
+    "palace_gods": {
+      "7": "值符",
+      "6": "腾蛇",
+      "1": "太阴",
+      "8": "六合",
+      "3": "白虎",
+      "4": "玄武",
+      "9": "九地",
+      "2": "九天",
+      "5": "九天"
+    },
+    "earth_gods": {
+      "2": "值符",
+      "7": "腾蛇",
+      "6": "太阴",
+      "1": "六合",
+      "8": "白虎",
+      "3": "玄武",
+      "4": "九地",
+      "9": "九天",
+      "5": "值符"
+    }
+  },
+  "pan_summary": {
+    "dun_type": "阳遁",
+    "bureau_num": 6,
+    "zhi_fu": {
+      "star": "天芮",
+      "origin_palace": 2,
+      "heaven_palace": 7
+    },
+    "zhi_shi": {
+      "door": "死门",
+      "palace": 7
+    },
+    "kong_palaces": [
+      8,
+      1
+    ],
+    "ma_palace": 4,
+    "palaces": [
+      {
+        "palace": 1,
+        "dir": "坎",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡"
+      },
+      {
+        "palace": 2,
+        "dir": "坤",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 3,
+        "dir": "震",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 4,
+        "dir": "巽",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "驿马"
+      },
+      {
+        "palace": 6,
+        "dir": "乾",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 7,
+        "dir": "兑",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "值使宫，天盘值符宫"
+      },
+      {
+        "palace": 8,
+        "dir": "艮",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡"
+      },
+      {
+        "palace": 9,
+        "dir": "离",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      }
+    ]
+  },
+  "context": {
+    "market": "",
+    "time_range": "",
+    "direction": "",
+    "specific_target": "",
+    "notes": ""
+  },
+  "analysis": "（请填写分析过程）",
+  "outcome": {
+    "predicted": "",
+    "actual": "",
+    "accuracy": "",
+    "key_turning_point": "",
+    "deviation_reason": ""
+  },
+  "insights": "该局面最大的看点在于，五不遇时，无奇门宫，代表风险的白虎和天盘庚都击中与震宫，这一宫正好是开盘的时间；但该宫还有生门地盘丁奇，所以跳空下跌后有反弹的生机，巽宫又出现了马星，，这是饭庄信号。所以有个抄底机会在13：50-14：00之间；开盘需要预判才能避开开盘的风险",
+  "tags": [],
+  "rating": 0,
+  "created_at": "2026-06-13T11:07:39"
+}

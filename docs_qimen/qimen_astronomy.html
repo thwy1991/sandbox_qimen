@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奇门遁甲 · 荀爽天文模型</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body {
+  background:#0a0a12;
+  font-family:"Microsoft YaHei","SimSun",serif;
+  color:#ccc;
+  overflow:hidden;
+  height:100vh;
+  width:100vw;
+}
+
+canvas { display:block; }
+
+/* HUD overlay */
+.hud {
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  z-index:10;text-align:center;
+  pointer-events:none;
+}
+.hud h1 {
+  font-size:26px;letter-spacing:6px;
+  color:#f0d88a;
+  text-shadow:0 0 30px rgba(240,200,100,.5);
+}
+.hud .sub {
+  font-size:13px;color:#7a6a50;margin-top:2px;
+}
+
+/* side panel */
+.panel {
+  position:fixed;
+  right:16px;top:50%;transform:translateY(-50%);
+  z-index:10;
+  background:rgba(15,12,8,.85);
+  border:1px solid #4a3a20;
+  border-radius:12px;
+  padding:16px 18px;
+  width:200px;
+  backdrop-filter:blur(6px);
+}
+.panel h3 {
+  font-size:14px;color:#f0d88a;text-align:center;
+  margin-bottom:10px;letter-spacing:2px;
+}
+.panel .btn {
+  display:block;width:100%;padding:7px 0;margin:4px 0;
+  background:rgba(30,20,10,.7);
+  border:1px solid #4a3a20;
+  color:#c0a870;border-radius:6px;cursor:pointer;
+  font-size:12px;text-align:center;transition:all .2s;
+  font-family:inherit;
+}
+.panel .btn:hover {background:rgba(60,40,15,.8);border-color:#8a6a30;color:#f0d88a;}
+.panel .btn.active {background:rgba(100,60,15,.8);border-color:#c8960c;color:#f0d88a;}
+.panel .divider {
+  height:1px;background:#3a2a15;margin:8px 0;
+}
+.panel .legend-item {
+  font-size:11px;padding:3px 0;display:flex;align-items:center;gap:6px;
+}
+.panel .legend-dot {
+  width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;
+}
+
+/* bottom info */
+.info-bar {
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  z-index:10;text-align:center;
+  font-size:14px;color:#b8a070;
+  background:rgba(15,12,8,.7);
+  padding:8px 20px;border-radius:20px;
+  border:1px solid #3a2a15;
+  pointer-events:none;
+}
+.info-bar strong {color:#f0d88a;}
+
+/* tips */
+.tips {
+  position:fixed;bottom:60px;left:50%;transform:translateX(-50%);
+  z-index:10;
+  font-size:11px;color:#5a4a30;
+  pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <h1>🌌 奇门遁甲 · 荀爽天文模型</h1>
+  <div class="sub">黄道盘（公转） ↔ 赤道盘（自转） · 覆盘叠加</div>
+</div>
+
+<div class="panel" id="panel">
+  <h3>🎮 视角切换</h3>
+  <button class="btn active" onclick="setView('free')" id="btnFree">🔄 自由旋转</button>
+  <button class="btn" onclick="setView('top')" id="btnTop">⬆ 覆盘视角（北极俯视）</button>
+  <button class="btn" onclick="setView('side')" id="btnSide">↔ 侧视（黄赤交角）</button>
+  <button class="btn" onclick="setView('ecliptic')" id="btnEcl">🎯 黄道正视</button>
+
+  <div class="divider"></div>
+  <h3>⏯ 演示模式</h3>
+  <button class="btn" onclick="toggleMode('orbit')" id="btnOrbit">🔄 自动旋转</button>
+  <button class="btn" onclick="toggleMode('overlay')" id="btnOverlay">📐 覆盘动画</button>
+  <button class="btn" onclick="toggleMode('labels')" id="btnLabels">🏷 标注显示</button>
+
+  <div class="divider"></div>
+  <h3>📖 图例</h3>
+  <div class="legend-item"><span class="legend-dot" style="background:#ff6644"></span> 黄道圈（公转·太阳路径）</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#4488ff"></span> 赤道圈（自转·地球赤道）</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ffaa00"></span> 黄赤交点（春分/秋分）</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ffffff"></span> 北极星（天轴）</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#44cc88"></span> 地球</div>
+</div>
+
+<div class="info-bar" id="infoBar">
+  <strong>自由旋转</strong> — 拖拽鼠标旋转 | 滚轮缩放 | 右侧面板切换视角
+</div>
+<div class="tips">黄赤交角 ≈ 23.5° ｜ 荀爽「覆盘」= 黄道盘叠加于赤道盘之上</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+// ==================== SCENE SETUP ====================
+const scene = new THREE.Scene();
+
+// Starfield background
+const starsGeo = new THREE.BufferGeometry();
+const starCount = 2000;
+const starVerts = [];
+for(let i=0;i<starCount;i++) {
+  const theta = Math.random()*Math.PI*2;
+  const phi = Math.acos(2*Math.random()-1);
+  const r = 25 + Math.random()*10;
+  starVerts.push(r*Math.sin(phi)*Math.cos(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi));
+}
+starsGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts,3));
+const starsMat = new THREE.PointsMaterial({color:0x888899, size:.06, transparent:true, opacity:.8});
+const stars = new THREE.Points(starsGeo, starsMat);
+scene.add(stars);
+
+// Camera
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 1, 60);
+camera.position.set(0, 8, 14);
+camera.lookAt(0,0,0);
+
+// Renderers
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.shadowMap.enabled = true;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+document.body.appendChild(renderer.domElement);
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(window.innerWidth, window.innerHeight);
+labelRenderer.domElement.style.position = 'fixed';
+labelRenderer.domElement.style.top = '0';
+labelRenderer.domElement.style.pointerEvents = 'none';
+document.body.appendChild(labelRenderer.domElement);
+
+// Controls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = .08;
+controls.minDistance = 4;
+controls.maxDistance = 25;
+controls.target.set(0,0,0);
+controls.autoRotate = true;
+controls.autoRotateSpeed = .4;
+
+// Lights
+const ambientLight = new THREE.AmbientLight(0x222244, 1.5);
+scene.add(ambientLight);
+const dirLight = new THREE.DirectionalLight(0xffeedd, 3);
+dirLight.position.set(10,15,8);
+scene.add(dirLight);
+const pointLight = new THREE.PointLight(0xffffff, 50, 2);
+pointLight.position.set(0,8,0);
+scene.add(pointLight);
+
+// ==================== CELESTIAL SPHERE ====================
+const sphereGeo = new THREE.SphereGeometry(8, 64, 48);
+const sphereMat = new THREE.MeshPhysicalMaterial({
+  color:0x111133,
+  transparent:true,
+  opacity:.08,
+  roughness:.9,
+  metalness:0,
+  side:THREE.DoubleSide
+});
+const celestialSphere = new THREE.Mesh(sphereGeo, sphereMat);
+scene.add(celestialSphere);
+
+// Wireframe grid on sphere
+const wireGeo = new THREE.SphereGeometry(8.02, 48, 32);
+const wireMat = new THREE.MeshBasicMaterial({color:0x222244, wireframe:true, transparent:true, opacity:.15});
+const wireSphere = new THREE.Mesh(wireGeo, wireMat);
+scene.add(wireSphere);
+
+// ==================== POLAR AXIS ====================
+const axisLen = 9;
+const axisGeom = new THREE.CylinderGeometry(.04, .04, axisLen*2, 16);
+const axisMat = new THREE.MeshBasicMaterial({color:0x888899, transparent:true, opacity:.5});
+const polarAxis = new THREE.Mesh(axisGeom, axisMat);
+scene.add(polarAxis);
+
+// North pole indicator
+const poleGeo = new THREE.SphereGeometry(.12, 16, 16);
+const poleMat = new THREE.MeshBasicMaterial({color:0xffffff});
+const northPole = new THREE.Mesh(poleGeo, poleMat);
+northPole.position.set(0, axisLen, 0);
+scene.add(northPole);
+
+// Polaris star (glowing)
+const polarisGroup = new THREE.Group();
+polarisGroup.position.set(0, 8.5, 0);
+
+const polarisGeo = new THREE.SphereGeometry(.18, 32, 32);
+const polarisMat = new THREE.MeshBasicMaterial({color:0xffffff});
+const polarisMesh = new THREE.Mesh(polarisGeo, polarisMat);
+polarisGroup.add(polarisMesh);
+
+// Polaris glow
+const glowGeo = new THREE.SphereGeometry(.35, 32, 32);
+const glowMat = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:.3});
+const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+polarisGroup.add(glowMesh);
+
+// Outer glow
+const glowGeo2 = new THREE.SphereGeometry(.6, 32, 32);
+const glowMat2 = new THREE.MeshBasicMaterial({color:0xaaccff, transparent:true, opacity:.15});
+const glowMesh2 = new THREE.Mesh(glowGeo2, glowMat2);
+polarisGroup.add(glowMesh2);
+
+scene.add(polarisGroup);
+
+// South pole
+const southPole = new THREE.Mesh(poleGeo.clone(), new THREE.MeshBasicMaterial({color:0x444444}));
+southPole.position.set(0, -axisLen, 0);
+scene.add(southPole);
+
+// ==================== EQUATORIAL PLANE (赤道面) ====================
+const eqGroup = new THREE.Group();
+
+// Equatorial ring
+const eqRingGeo = new THREE.TorusGeometry(5.5, .06, 16, 128);
+const eqRingMat = new THREE.MeshStandardMaterial({color:0x4488ff, emissive:0x2244aa, emissiveIntensity:.6, roughness:.3, metalness:.5});
+const eqRing = new THREE.Mesh(eqRingGeo, eqRingMat);
+eqGroup.add(eqRing);
+
+// Semi-transparent equatorial disk
+const eqDiskGeo = new THREE.RingGeometry(1.2, 5.5, 64);
+const eqDiskMat = new THREE.MeshBasicMaterial({color:0x3366cc, transparent:true, opacity:.08, side:THREE.DoubleSide});
+const eqDisk = new THREE.Mesh(eqDiskGeo, eqDiskMat);
+eqDisk.rotation.x = -Math.PI/2;
+eqGroup.add(eqDisk);
+
+// Inner ring (equator projection on celestial sphere)
+const eqRing2Geo = new THREE.TorusGeometry(7.8, .03, 8, 128);
+const eqRing2 = new THREE.Mesh(eqRing2Geo, new THREE.MeshBasicMaterial({color:0x3366cc, transparent:true, opacity:.25}));
+eqGroup.add(eqRing2);
+
+scene.add(eqGroup);
+
+// ==================== ECLIPTIC PLANE (黄道面) ====================
+const OBLIQUITY = 23.44 * (Math.PI/180); // 黄赤交角
+
+const ecGroup = new THREE.Group();
+ecGroup.rotation.x = OBLIQUITY;
+
+// Ecliptic ring
+const ecRingGeo = new THREE.TorusGeometry(6, .07, 16, 128);
+const ecRingMat = new THREE.MeshStandardMaterial({color:0xff5533, emissive:0x662211, emissiveIntensity:.6, roughness:.3, metalness:.5});
+const ecRing = new THREE.Mesh(ecRingGeo, ecRingMat);
+ecGroup.add(ecRing);
+
+// Semi-transparent ecliptic disk
+const ecDiskGeo = new THREE.RingGeometry(1.2, 6, 64);
+const ecDiskMat = new THREE.MeshBasicMaterial({color:0xcc4422, transparent:true, opacity:.06, side:THREE.DoubleSide});
+const ecDisk = new THREE.Mesh(ecDiskGeo, ecDiskMat);
+ecDisk.rotation.x = -Math.PI/2;
+ecGroup.add(ecDisk);
+
+// Ecliptic projection on celestial sphere
+const ecRing2Geo = new THREE.TorusGeometry(7.9, .03, 8, 128);
+const ecRing2 = new THREE.Mesh(ecRing2Geo, new THREE.MeshBasicMaterial({color:0xaa3322, transparent:true, opacity:.2}));
+ecGroup.add(ecRing2);
+
+scene.add(ecGroup);
+
+// ==================== INTERSECTION POINTS ====================
+// Spring equinox (春分) - where ecliptic crosses equator going north
+const intersectionGeo = new THREE.SphereGeometry(.2, 16, 16);
+const intersectionMat1 = new THREE.MeshStandardMaterial({color:0xffaa00, emissive:0xff8800, emissiveIntensity:1, roughness:.2});
+
+// Spring equinox point (vernal equinox - along +X axis roughly)
+const vernalPt = new THREE.Mesh(intersectionGeo, intersectionMat1);
+vernalPt.position.set(5.5, 0, 0);
+scene.add(vernalPt);
+
+// Glow for vernal
+const vGlow = new THREE.Mesh(new THREE.SphereGeometry(.4,16,16),
+  new THREE.MeshBasicMaterial({color:0xffaa00, transparent:true, opacity:.25}));
+vernalPt.add(vGlow);
+
+// Autumn equinox
+const autumnalPt = new THREE.Mesh(intersectionGeo.clone(), intersectionMat1.clone());
+autumnalPt.position.set(-5.5, 0, 0);
+scene.add(autumnalPt);
+const aGlow = new THREE.Mesh(new THREE.SphereGeometry(.4,16,16),
+  new THREE.MeshBasicMaterial({color:0xffaa00, transparent:true, opacity:.25}));
+autumnalPt.add(aGlow);
+
+// ==================== EARTH ====================
+const earthGroup = new THREE.Group();
+
+const earthGeo = new THREE.SphereGeometry(.45, 48, 48);
+const earthMat = new THREE.MeshStandardMaterial({color:0x44aa66, roughness:.6, metalness:.1});
+const earthMesh = new THREE.Mesh(earthGeo, earthMat);
+earthGroup.add(earthMesh);
+
+// Earth axial tilt indicator
+const earthAxisGeo = new THREE.CylinderGeometry(.03,.03,1.2,8);
+const earthAxis = new THREE.Mesh(earthAxisGeo, new THREE.MeshBasicMaterial({color:0x888888}));
+earthGroup.add(earthAxis);
+
+// Small equatorial ring around earth
+const earthEqGeo = new THREE.TorusGeometry(.47,.02,8,32);
+const earthEq = new THREE.Mesh(earthEqGeo, new THREE.MeshBasicMaterial({color:0x88aacc, transparent:true, opacity:.5}));
+earthGroup.add(earthEq);
+
+scene.add(earthGroup);
+
+// ==================== 赤道面 十二地支标记 ====================
+const DIZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const DIZHI_COLORS = {
+  '子':0x6666ff,'丑':0x888866,'寅':0x66aa66,'卯':0x66aa66,
+  '辰':0x888866,'巳':0xff6644,'午':0xff4444,'未':0x888866,
+  '申':0xffaa44,'酉':0xffaa44,'戌':0x888866,'亥':0x6666ff
+};
+
+const eqMarkers = [];
+for(let i=0;i<12;i++) {
+  const angle = (i/12)*Math.PI*2 - Math.PI/2;
+  const r = 5.8;
+  const x = Math.cos(angle)*r;
+  const z = Math.sin(angle)*r;
+
+  // Small sphere marker
+  const mGeo = new THREE.SphereGeometry(.1, 8, 8);
+  const mMat = new THREE.MeshStandardMaterial({color:DIZHI_COLORS[DIZHI[i]], emissive:DIZHI_COLORS[DIZHI[i]], emissiveIntensity:.5});
+  const marker = new THREE.Mesh(mGeo, mMat);
+  marker.position.set(x, 0, z);
+  marker.userData = {dizhi:DIZHI[i], angle:i};
+  scene.add(marker);
+  eqMarkers.push(marker);
+
+  // Label
+  const div = document.createElement('div');
+  div.textContent = DIZHI[i];
+  div.style.cssText = `font-size:13px;color:#aaccff;font-weight:bold;text-shadow:0 0 6px #4488ff;font-family:"Microsoft YaHei","SimSun";`;
+  const label = new CSS2DObject(div);
+  label.position.set(Math.cos(angle)*(r+.6), .15, Math.sin(angle)*(r+.6));
+  label.userData = {type:'eqLabel'};
+  scene.add(label);
+}
+
+// ==================== 黄道面 二十四节气标记 ====================
+const JIEQI = [
+  '春分','清明','谷雨','立夏','小满','芒种',
+  '夏至','小暑','大暑','立秋','处暑','白露',
+  '秋分','寒露','霜降','立冬','小雪','大雪',
+  '冬至','小寒','大寒','立春','雨水','惊蛰'
+];
+
+// Get ecliptic position for a given angle (in the tilted plane)
+function eclipticPos(angle) {
+  const r = 6.3;
+  // In ecliptic plane (rotated by OBLIQUITY around X)
+  const ecX = Math.cos(angle) * r;
+  const ecY = Math.sin(angle) * r;
+  // Rotate by obliquity around X axis
+  const y = ecY * Math.cos(OBLIQUITY);
+  const z = ecY * Math.sin(OBLIQUITY);
+  return {x:ecX, y:y, z:z};
+}
+
+for(let i=0;i<24;i++) {
+  const angle = (i/24)*Math.PI*2;
+  const pos = eclipticPos(angle);
+
+  const mGeo = new THREE.SphereGeometry(.08, 8, 8);
+  const mMat = new THREE.MeshStandardMaterial({color:0xff8855, emissive:0x441100, emissiveIntensity:.4});
+  const marker = new THREE.Mesh(mGeo, mMat);
+  marker.position.set(pos.x, pos.y, pos.z);
+  scene.add(marker);
+
+  // Label - only show major ones to avoid clutter
+  const isMajor = ['春分','夏至','秋分','冬至','立春','立夏','立秋','立冬'].includes(JIEQI[i]);
+  if(isMajor) {
+    const div = document.createElement('div');
+    div.textContent = JIEQI[i];
+    div.style.cssText = `font-size:12px;color:#ff9977;font-weight:bold;text-shadow:0 0 6px #662211;font-family:"Microsoft YaHei","SimSun";`;
+    const label = new CSS2DObject(div);
+    const lp = eclipticPos(angle, 7.1);
+    label.position.set(lp.x, lp.y, lp.z);
+    label.userData = {type:'ecLabel'};
+    scene.add(label);
+  }
+}
+
+// ==================== PROJECTION LINES ====================
+// Dashed lines from ecliptic to equatorial plane (showing 覆盘 projection)
+
+function createDashedLine(start, end, color) {
+  const points = [];
+  const segments = 8;
+  for(let i=0;i<=segments;i++) {
+    const t = i/segments;
+    points.push(new THREE.Vector3(
+      start.x + (end.x-start.x)*t,
+      start.y + (end.y-start.y)*t,
+      start.z + (end.z-start.z)*t
+    ));
+  }
+  const geo = new THREE.BufferGeometry().setFromPoints(points);
+  const mat = new THREE.LineDashedMaterial({color:color, dashSize:.3, gapSize:.2, transparent:true, opacity:.3});
+  const line = new THREE.Line(geo, mat);
+  line.computeLineDistances();
+  return line;
+}
+
+// Projection lines for the 4 cardinal points
+const cardinalAngles = [
+  {ec:0, eq:0, label:'春分'},      // same
+  {ec:Math.PI/2, eq:Math.PI/2, label:'夏至'},
+  {ec:Math.PI, eq:Math.PI, label:'秋分'},
+  {ec:Math.PI*1.5, eq:Math.PI*1.5, label:'冬至'}
+];
+
+for(const cp of cardinalAngles) {
+  const ecPos = eclipticPos(cp.ec);
+  const eqR = 5.5;
+  const eqPos = {x:Math.cos(cp.eq)*eqR, y:0, z:Math.sin(cp.eq)*eqR};
+  const line = createDashedLine(
+    new THREE.Vector3(ecPos.x,ecPos.y,ecPos.z),
+    new THREE.Vector3(eqPos.x,eqPos.y,eqPos.z),
+    0x996633
+  );
+  line.userData = {type:'projection'};
+  scene.add(line);
+}
+
+// ==================== 九宫格投影 (on equatorial plane) ====================
+const qimenGroup = new THREE.Group();
+const PALACE_ORDER = [4,9,2, 3,5,7, 8,1,6];
+const PALACE_POSITIONS = [
+  [-1,0,-1],[1,0,-1],[2,0,0],  // 4(巽),9(离),2(坤)
+  [-1,0,0],[0,0,0],[1,0,0],    // 3(震),5(中),7(兑)
+  [-1,0,1],[1,0,1],[-2,0,0]    // 8(艮),1(坎),6(乾)
+];
+// Wait, let me use proper Luoshu mapping
+const luoshuMap = {
+  4:[-1.5, 0, -1.5], 9:[0, 0, -1.5], 2:[1.5, 0, -1.5],
+  3:[-1.5, 0, 0],    5:[0, 0, 0],    7:[1.5, 0, 0],
+  8:[-1.5, 0, 1.5],  1:[0, 0, 1.5],  6:[1.5, 0, 1.5]
+};
+
+for(const [p, pos] of Object.entries(luoshuMap)) {
+  const scale = 1.3;
+  const px = pos[0]*scale, pz = pos[2]*scale;
+  // Square outline
+  const sqGeo = new THREE.PlaneGeometry(.7,.7);
+  const sqMat = new THREE.MeshBasicMaterial({color:0x334466, transparent:true, opacity:.15, side:THREE.DoubleSide});
+  const sq = new THREE.Mesh(sqGeo, sqMat);
+  sq.rotation.x = -Math.PI/2;
+  sq.position.set(px, .02, pz);
+  scene.add(sq);
+
+  // Border
+  const borderGeo = new THREE.EdgesGeometry(sqGeo);
+  const borderMat = new THREE.LineBasicMaterial({color:0x446688, transparent:true, opacity:.3});
+  const border = new THREE.LineSegments(borderGeo, borderMat);
+  border.rotation.x = -Math.PI/2;
+  border.position.set(px, .03, pz);
+  border.userData = {type:'qimenGrid'};
+  scene.add(border);
+}
+
+// ==================== ANIMATION STATE ====================
+let viewTarget = 'free';
+let overlayPhase = 0;
+let showOverlay = false;
+let showLabels = true;
+
+// ==================== CREATE OVERLAY PLANE (覆盘演示用) ====================
+const overlayGroup = new THREE.Group();
+overlayGroup.visible = false;
+
+// A semi-transparent plane representing the "overlay" view
+const overlayPlaneGeo = new THREE.PlaneGeometry(14,14);
+const overlayPlaneMat = new THREE.MeshBasicMaterial({color:0x443322, transparent:true, opacity:.1, side:THREE.DoubleSide});
+const overlayPlane = new THREE.Mesh(overlayPlaneGeo, overlayPlaneMat);
+overlayPlane.rotation.x = -Math.PI/2;
+overlayPlane.position.y = -.1;
+overlayGroup.add(overlayPlane);
+
+// Rings on overlay plane showing both ecliptic and equatorial projections
+const overlayRingGeo = new THREE.TorusGeometry(6, .04, 16, 128);
+const overlayRing1 = new THREE.Mesh(overlayRingGeo,
+  new THREE.MeshBasicMaterial({color:0xff5533, transparent:true, opacity:.4}));
+overlayRing1.rotation.x = -Math.PI/2;
+overlayGroup.add(overlayRing1);
+
+const overlayRing2Geo = new THREE.TorusGeometry(5.5, .04, 16, 128);
+const overlayRing2 = new THREE.Mesh(overlayRing2Geo,
+  new THREE.MeshBasicMaterial({color:0x4488ff, transparent:true, opacity:.4}));
+overlayRing2.rotation.x = -Math.PI/2;
+overlayGroup.add(overlayRing2);
+
+scene.add(overlayGroup);
+
+// ==================== RAYS FROM POLARIS ====================
+const raysGroup = new THREE.Group();
+for(let i=0;i<8;i++) {
+  const angle = (i/8)*Math.PI*2;
+  const rayGeo = new THREE.CylinderGeometry(.01,.01,3,4);
+  const ray = new THREE.Mesh(rayGeo, new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:.06}));
+  ray.position.set(Math.cos(angle)*1.5, 6, Math.sin(angle)*1.5);
+  ray.lookAt(new THREE.Vector3(Math.cos(angle)*5, -2, Math.sin(angle)*5));
+  raysGroup.add(ray);
+}
+scene.add(raysGroup);
+
+// ==================== CONTROLS ====================
+window.setView = function(view) {
+  viewTarget = view;
+
+  // Update button states
+  document.querySelectorAll('#panel .btn').forEach(b => b.classList.remove('active'));
+
+  if(view==='free') {
+    document.getElementById('btnFree').classList.add('active');
+    controls.autoRotate = true;
+    document.getElementById('infoBar').innerHTML = '<strong>自由旋转</strong> — 拖拽鼠标旋转 | 滚轮缩放 | 观察黄赤交角';
+  } else if(view==='top') {
+    document.getElementById('btnTop').classList.add('active');
+    controls.autoRotate = false;
+    animateCamera(new THREE.Vector3(0,13,.1), new THREE.Vector3(0,0,0),
+      '<strong>覆盘视角（北极俯视）</strong> — 黄道盘（红）与赤道盘（蓝）的叠加态 · 荀爽「十二盘式」');
+  } else if(view==='side') {
+    document.getElementById('btnSide').classList.add('active');
+    controls.autoRotate = false;
+    animateCamera(new THREE.Vector3(14,.5,0), new THREE.Vector3(0,0,0),
+      '<strong>侧视</strong> — 黄赤交角 ≈ 23.5° · 两盘在此角度下交错');
+  } else if(view==='ecliptic') {
+    document.getElementById('btnEcl').classList.add('active');
+    controls.autoRotate = false;
+    const camPos = new THREE.Vector3(0,12,0).applyAxisAngle(new THREE.Vector3(1,0,0), OBLIQUITY);
+    animateCamera(new THREE.Vector3(camPos.x, camPos.y, camPos.z+8), new THREE.Vector3(0,0,0),
+      '<strong>黄道正视</strong> — 从黄道面法线方向看 · 二十四节气均匀分布');
+  }
+};
+
+window.toggleMode = function(mode) {
+  if(mode==='orbit') {
+    controls.autoRotate = !controls.autoRotate;
+    document.getElementById('btnOrbit').classList.toggle('active', controls.autoRotate);
+  } else if(mode==='overlay') {
+    showOverlay = !showOverlay;
+    overlayGroup.visible = showOverlay;
+    document.getElementById('btnOverlay').classList.toggle('active', showOverlay);
+    if(showOverlay) {
+      document.getElementById('infoBar').innerHTML = '<strong>覆盘动画 ON</strong> — 地面投影显示黄道与赤道的叠加效果';
+    }
+  } else if(mode==='labels') {
+    showLabels = !showLabels;
+    document.getElementById('btnLabels').classList.toggle('active', showLabels);
+  }
+};
+
+function animateCamera(targetPos, targetLook, infoText) {
+  const startPos = camera.position.clone();
+  const startTarget = controls.target.clone();
+  const startTime = Date.now();
+  const duration = 1200;
+
+  function animStep() {
+    const elapsed = Date.now() - startTime;
+    const t = Math.min(elapsed/duration, 1);
+    // Ease in-out
+    const ease = t<.5 ? 2*t*t : -1+(4-2*t)*t;
+
+    camera.position.lerpVectors(startPos, targetPos, ease);
+    controls.target.lerpVectors(startTarget, targetLook, ease);
+    controls.update();
+
+    if(t<1) {
+      requestAnimationFrame(animStep);
+    } else {
+      document.getElementById('infoBar').innerHTML = infoText;
+    }
+  }
+  animStep();
+}
+
+// Initialize
+document.getElementById('btnFree').classList.add('active');
+document.getElementById('btnOrbit').classList.add('active');
+document.getElementById('btnLabels').classList.add('active');
+
+// ==================== RENDER LOOP ====================
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const dt = clock.getDelta();
+  const time = performance.now()*.001;
+
+  controls.update();
+
+  // Pulsating polaris
+  const pulse = 1 + Math.sin(time*2)*.15;
+  polarisGroup.children[1].scale.setScalar(pulse);
+  polarisGroup.children[2].scale.setScalar(pulse*1.1);
+
+  // Gentle rotation of stars
+  stars.rotation.y += dt*.02;
+
+  // Overlay animation
+  if(showOverlay) {
+    overlayPhase += dt*.5;
+    overlayPlane.material.opacity = .08 + Math.sin(overlayPhase)*.04;
+    overlayRing1.material.opacity = .3 + Math.sin(overlayPhase)*.15;
+    overlayRing2.material.opacity = .3 + Math.sin(overlayPhase+Math.PI)*.15;
+  }
+
+  // Update label visibility
+  scene.traverse(child => {
+    if(child.userData && (child.userData.type==='eqLabel' || child.userData.type==='ecLabel')) {
+      child.visible = showLabels;
+    }
+  });
+
+  // Gentle wobble on polar axis rays
+  raysGroup.children.forEach((ray,i) => {
+    ray.material.opacity = .04 + Math.sin(time*1.5 + i)*.03;
+  });
+
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+
+animate();
+
+// Resize
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+console.log('🌌 奇门遁甲 · 荀爽天文模型已就绪');
+console.log('黄赤交角:', (OBLIQUITY*180/Math.PI).toFixed(1)+'°');
+console.log('操作：鼠标拖拽旋转 | 滚轮缩放 | 右键面板切换视角');
+</script>
+</body>
+</html>

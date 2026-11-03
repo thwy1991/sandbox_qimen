@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/chart/chart",
+    "pages/about/about"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#8B4513",
+    "navigationBarTitleText": "奇门遁甲排盘",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5E6D3"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,229 @@
+{
+  "id": "qimen_20260619_1000",
+  "datetime": "2026-06-19T10:00:00",
+  "pan": {
+    "chart_info": {
+      "time": "丙午年 甲午月 甲子日 己巳时",
+      "jieqi": "芒种",
+      "dun": "阳",
+      "bureau": "阳遁6局",
+      "yuan": "上元",
+      "xun_shou_gan": "戊",
+      "zhi_fu_star": "天心",
+      "zhi_fu_pos": 6,
+      "zhi_fu_heaven_pos": 7,
+      "zhi_shi_door": "开门",
+      "zhi_shi_pos": 2,
+      "kong_pair": [
+        "戌",
+        "亥"
+      ],
+      "kong_palaces": [
+        6
+      ],
+      "ma_zhi": "亥",
+      "ma_palace": 6
+    },
+    "di_pan": {
+      "6": "戊",
+      "7": "己",
+      "8": "庚",
+      "9": "辛",
+      "1": "壬",
+      "2": "癸",
+      "3": "丁",
+      "4": "丙",
+      "5": "乙"
+    },
+    "earth_jigan": {
+      "2": "乙"
+    },
+    "hv_stems": {
+      "7": "戊",
+      "6": "壬",
+      "1": "庚",
+      "8": "丁",
+      "3": "丙",
+      "4": "辛",
+      "9": "癸",
+      "2": "己",
+      "5": "己"
+    },
+    "jigan_stems": {
+      "9": "乙"
+    },
+    "hv_stars": {
+      "1": "天任",
+      "2": "天柱",
+      "3": "天辅",
+      "4": "天英",
+      "5": "天柱",
+      "6": "天蓬",
+      "7": "天心",
+      "8": "天冲",
+      "9": "天芮"
+    },
+    "hv_stars_jigan": {
+      "9": "天禽"
+    },
+    "palace_doors": {
+      "2": "开门",
+      "7": "休门",
+      "6": "生门",
+      "1": "伤门",
+      "8": "杜门",
+      "3": "景门",
+      "4": "死门",
+      "9": "惊门",
+      "5": "开门"
+    },
+    "palace_gods": {
+      "7": "值符",
+      "6": "腾蛇",
+      "1": "太阴",
+      "8": "六合",
+      "3": "白虎",
+      "4": "玄武",
+      "9": "九地",
+      "2": "九天",
+      "5": "九天"
+    },
+    "earth_gods": {
+      "6": "值符",
+      "1": "腾蛇",
+      "8": "太阴",
+      "3": "六合",
+      "4": "白虎",
+      "9": "玄武",
+      "2": "九地",
+      "7": "九天",
+      "5": "九地"
+    }
+  },
+  "pan_summary": {
+    "dun_type": "阳遁",
+    "bureau_num": 6,
+    "zhi_fu": {
+      "star": "天心",
+      "origin_palace": 6,
+      "heaven_palace": 7
+    },
+    "zhi_shi": {
+      "door": "开门",
+      "palace": 2
+    },
+    "kong_palaces": [
+      6
+    ],
+    "ma_palace": 6,
+    "palaces": [
+      {
+        "palace": 1,
+        "dir": "坎",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 2,
+        "dir": "坤",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "值使宫"
+      },
+      {
+        "palace": 3,
+        "dir": "震",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 4,
+        "dir": "巽",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 6,
+        "dir": "乾",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡，驿马"
+      },
+      {
+        "palace": 7,
+        "dir": "兑",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "天盘值符宫"
+      },
+      {
+        "palace": 8,
+        "dir": "艮",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 9,
+        "dir": "离",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      }
+    ]
+  },
+  "context": {
+    "market": "",
+    "time_range": "",
+    "direction": "",
+    "specific_target": "",
+    "notes": ""
+  },
+  "analysis": "（请填写分析过程）",
+  "outcome": {
+    "predicted": "",
+    "actual": "",
+    "accuracy": "",
+    "key_turning_point": "",
+    "deviation_reason": ""
+  },
+  "insights": "在这个时空，我开车去潮湿购物，在返回途中，车辆在5楼停车场开到一楼的时候，不小心蹭到墙壁。超市为景门有白虎，汽车为伤门，伤门庚+壬，日主为癸水，地刑玄武，己+癸",
+  "tags": [],
+  "rating": 0,
+  "created_at": "2026-06-19T12:05:10"
+}

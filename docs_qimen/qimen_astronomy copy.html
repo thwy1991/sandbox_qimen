@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奇门遁甲 · 一日自转演示</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050510;font-family:"Microsoft YaHei","SimSun",serif;color:#ccc;overflow:hidden;height:100vh;width:100vw}
+canvas{display:block}
+
+/* HUD */
+.hud{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;pointer-events:none}
+.hud h1{font-size:24px;letter-spacing:5px;color:#f0d88a;text-shadow:0 0 30px rgba(240,200,100,.5)}
+.hud .sub{font-size:12px;color:#6a5a40;margin-top:2px}
+
+/* —— left panel: 时辰时间轴 —— */
+.timeline-panel{
+  position:fixed;left:16px;top:50%;transform:translateY(-50%);
+  z-index:10;background:rgba(10,8,5,.9);border:1px solid #3a2a15;
+  border-radius:14px;padding:14px 16px;width:170px;
+  backdrop-filter:blur(8px);
+}
+.timeline-panel h3{font-size:13px;color:#f0d88a;text-align:center;margin-bottom:10px;letter-spacing:2px}
+.shichen-list{display:flex;flex-direction:column;gap:3px}
+.shichen-item{
+  padding:5px 8px;border-radius:6px;cursor:pointer;font-size:12px;
+  text-align:center;transition:all .2s;
+  border:1px solid transparent;
+  color:#6a5a40;
+}
+.shichen-item:hover{background:rgba(50,30,10,.5);border-color:#5a3a20}
+.shichen-item.active{background:rgba(180,120,20,.25);border-color:#c8960c;color:#f0d88a;font-weight:bold}
+.shichen-item.current{box-shadow:0 0 10px rgba(200,150,12,.3)}
+
+/* —— right panel: 信息 —— */
+.info-panel{
+  position:fixed;right:16px;top:50%;transform:translateY(-50%);
+  z-index:10;background:rgba(10,8,5,.9);border:1px solid #3a2a15;
+  border-radius:14px;padding:16px;width:200px;
+  backdrop-filter:blur(8px);
+}
+.info-panel h3{font-size:13px;color:#f0d88a;text-align:center;margin-bottom:8px;letter-spacing:2px}
+.info-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1a1008;font-size:11px}
+.info-row .l{color:#7a6a50}
+.info-row .v{color:#d4c5a0;font-weight:bold}
+.legend-item{font-size:10px;padding:3px 0;display:flex;align-items:center;gap:6px}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.divider{height:1px;background:#2a1a10;margin:8px 0}
+
+/* —— bottom bar —— */
+.bottom-bar{
+  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
+  z-index:10;display:flex;align-items:center;gap:12px;
+  background:rgba(10,8,5,.85);border:1px solid #3a2a15;
+  border-radius:24px;padding:8px 18px;
+  backdrop-filter:blur(8px);
+}
+.bottom-bar button{
+  padding:6px 14px;border-radius:6px;border:1px solid #4a3a20;
+  background:rgba(20,15,8,.8);color:#b8a070;cursor:pointer;
+  font-size:12px;transition:all .2s;font-family:inherit;
+}
+.bottom-bar button:hover{background:rgba(50,30,10,.8);border-color:#8a6a30;color:#f0d88a}
+.bottom-bar button.active{background:rgba(120,80,15,.7);border-color:#c8960c;color:#f0d88a}
+.bottom-bar .speed-label{font-size:11px;color:#6a5a40;min-width:50px}
+
+/* —— qimen overlay (right side of screen, 九宫) —— */
+.qimen-overlay{
+  position:fixed;bottom:70px;right:16px;z-index:10;
+  background:rgba(10,8,5,.9);border:1px solid #3a2a15;
+  border-radius:12px;padding:10px;width:200px;
+  backdrop-filter:blur(8px);
+}
+.qimen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.qimen-cell{
+  aspect-ratio:1;border:1px solid #3a2a15;border-radius:4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:10px;gap:1px;background:rgba(20,15,8,.5);
+  transition:all .3s;
+}
+.qimen-cell.hl{border-color:#c8960c;box-shadow:inset 0 0 8px rgba(200,150,12,.2)}
+.qimen-cell .qs{font-size:13px;font-weight:bold;color:#4a90d9}
+.qimen-cell .qd{font-size:9px;color:#9a8a6a}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <h1>🌍 奇门遁甲 · 一日自转与天盘流转</h1>
+  <div class="sub">赤道面为基准 | 黄赤交角 23.5° | 每时辰地球自转 30° | 荀爽「覆盘」模型</div>
+</div>
+
+<!-- 时辰时间轴 -->
+<div class="timeline-panel">
+  <h3>⏰ 十二时辰</h3>
+  <div class="shichen-list" id="shichenList"></div>
+</div>
+
+<!-- 信息面板 -->
+<div class="info-panel">
+  <h3>📋 实时信息</h3>
+  <div class="info-row"><span class="l">当前时辰</span><span class="v" id="infoShichen">—</span></div>
+  <div class="info-row"><span class="l">自转角度</span><span class="v" id="infoAngle">0°</span></div>
+  <div class="info-row"><span class="l">地球经度</span><span class="v" id="infoLon">—</span></div>
+  <div class="info-row"><span class="l">天盘偏移</span><span class="v" id="infoOffset">—</span></div>
+  <div class="divider"></div>
+  <div class="info-row"><span class="l">当前日期</span><span class="v" id="infoJieqi">夏至</span></div>
+  <div class="info-row"><span class="l">太阳黄经</span><span class="v" id="infoSunAngle">90°</span></div>
+  <div class="divider"></div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ff5533"></span> 黄道面 (公转·年)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#4488ff"></span> 赤道面 (自转·日)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ffffff"></span> 北极星 (天轴·甲)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#44cc66"></span> 地球 (观测点)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ffaa00"></span> 黄赤交点</div>
+  <div class="divider"></div>
+  <button style="width:100%;padding:6px;border-radius:6px;border:1px solid #4a3a20;background:rgba(20,15,8,.8);color:#b8a070;cursor:pointer;font-size:11px;font-family:inherit;margin-top:4px" onclick="resetEarth()">↺ 回到子时（0°）</button>
+</div>
+
+<!-- 九宫天盘面板 -->
+<div class="qimen-overlay" id="qimenOverlay">
+  <div style="text-align:center;font-size:11px;color:#8a7a50;margin-bottom:6px;letter-spacing:1px">九宫 · 天盘投影</div>
+  <div class="qimen-grid" id="qimenGrid"></div>
+</div>
+
+<!-- 底部控制栏 -->
+<div class="bottom-bar">
+  <button onclick="stepBack()" title="上一步">⏮</button>
+  <button onclick="togglePlay()" id="btnPlay">▶ 播放一日</button>
+  <button onclick="stepForward()" title="下一步">⏭</button>
+  <span style="color:#3a2a15">|</span>
+  <span class="speed-label">速度</span>
+  <input type="range" id="speedSlider" min="1" max="20" value="8" oninput="updateSpeed()" style="width:80px;accent-color:#c8960c">
+  <button onclick="zoomIn()" title="放大">🔍+</button>
+  <button onclick="zoomOut()" title="缩小">🔍-</button>
+  <span style="color:#3a2a15">|</span>
+  <button onclick="toggleView()" id="btnView">⬆ 覆盘视角</button>
+  <button onclick="toggleQimen()" id="btnQimen">📐 奇门投影</button>
+  <span style="color:#3a2a15">|</span>
+  <span class="speed-label">日期</span>
+  <select id="jieqiSelect" onchange="setJieqi(this.value)" style="background:rgba(20,15,8,.9);color:#c8960c;border:1px solid #5a4a20;border-radius:4px;padding:2px 6px;font-family:inherit;font-size:11px;cursor:pointer">
+    <option value="春分">🌸 春分</option>
+    <option value="谷雨">🌿 谷雨</option>
+    <option value="小满">🌾 小满</option>
+    <option value="夏至" selected>☀️ 夏至</option>
+    <option value="大暑">🔥 大暑</option>
+    <option value="处暑">🍂 处暑</option>
+    <option value="秋分">🌕 秋分</option>
+    <option value="霜降">❄️ 霜降</option>
+    <option value="小雪">🌨 小雪</option>
+    <option value="冬至">⛄ 冬至</option>
+    <option value="大寒">🧊 大寒</option>
+    <option value="雨水">💧 雨水</option>
+  </select>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+// ==================== CONSTANTS ====================
+const OBLIQUITY = 23.44 * Math.PI/180;
+const ONE_SHI_CHEN_DEG = 30 * Math.PI/180; // 30° per 时辰
+const DIZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const SHICHEN_TIME = ['23-1','1-3','3-5','5-7','7-9','9-11','11-13','13-15','15-17','17-19','19-21','21-23'];
+const SHICHEN_COLORS = [0x4466cc,0x666644,0x55aa55,0x55aa55,0x666644,0xcc5533,0xcc3333,0x666644,0xcc8833,0xcc8833,0x666644,0x4466cc];
+
+// Qimen mapping (阳遁4局 as example)
+const QIMEN_EARTH = {4:'戊',5:'己',6:'庚',7:'辛',8:'壬',9:'癸',1:'丁',2:'丙',3:'乙'};
+const QIMEN_DOOR  = {'戊':'伤','己':'杜','庚':'','辛':'开','壬':'惊','癸':'生','丁':'景','丙':'休','乙':'死'};
+const QIMEN_STAR  = {1:'蓬',2:'芮',3:'冲',4:'辅',5:'禽',6:'心',7:'柱',8:'任',9:'英'};
+
+// ==================== GLOBAL STATE ====================
+let shichenIndex = 0;        // 0=子时, ..., 11=亥时
+let earthRotation = 0;       // Earth's rotation angle (radians)
+let isPlaying = false;
+let playTimer = null;
+let playSpeed = 8;           // 1-20
+let viewMode = 'side';       // 'side' | 'top'
+let showQimenProj = true;
+
+// Sun position on ecliptic (control which day of year we simulate)
+// 0=春分, PI/2=夏至, PI=秋分, 3*PI/2=冬至
+const JIEQI_SUN_ANGLE = {
+  '春分':0, '谷雨':Math.PI/6, '小满':Math.PI/3, '夏至':Math.PI/2,
+  '大暑':Math.PI*2/3, '处暑':Math.PI*5/6, '秋分':Math.PI,
+  '霜降':Math.PI*7/6, '小雪':Math.PI*4/3, '冬至':Math.PI*3/2,
+  '大寒':Math.PI*5/3, '雨水':Math.PI*11/6
+};
+let currentJieqi = '夏至';  // default
+let sunEcAngle = JIEQI_SUN_ANGLE[currentJieqi];
+
+
+// ==================== SCENE SETUP ====================
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x050510, 0.00015);
+
+// Stars
+const starGeo = new THREE.BufferGeometry();
+const starPos = [];
+for(let i=0;i<3000;i++){
+  const th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
+  const r=18+Math.random()*15;
+  starPos.push(r*Math.sin(ph)*Math.cos(th), r*Math.sin(ph)*Math.sin(th), r*Math.cos(ph));
+}
+starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos,3));
+const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0x7788aa,size:.05,transparent:true,opacity:.7}));
+scene.add(stars);
+
+// Camera
+const camera = new THREE.PerspectiveCamera(48, window.innerWidth/window.innerHeight, 1, 60);
+camera.position.set(6, 7, 12);
+camera.lookAt(0,0,0);
+
+// Renderers
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.shadowMap.enabled = true;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+document.body.appendChild(renderer.domElement);
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(window.innerWidth, window.innerHeight);
+labelRenderer.domElement.style.position = 'fixed';
+labelRenderer.domElement.style.top = '0';
+labelRenderer.domElement.style.pointerEvents = 'none';
+document.body.appendChild(labelRenderer.domElement);
+
+// Controls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = .07;
+controls.minDistance = 4;
+controls.maxDistance = 22;
+controls.target.set(0,0,0);
+controls.autoRotate = false;
+controls.autoRotateSpeed = .3;
+
+// Lights
+scene.add(new THREE.AmbientLight(0x111133, 0.5));
+const SUN_DIST = 10;
+const sunLight = new THREE.DirectionalLight(0xffffcc, 8);
+scene.add(sunLight);
+// 辅助半球光：天空淡蓝 + 地面暗色，增强立体感
+const hemiLight = new THREE.HemisphereLight(0x446688, 0x111122, 0.6);
+scene.add(hemiLight);
+
+// 太阳球体（可视光源指示）
+const sunGroup = new THREE.Group();
+const sunGeo = new THREE.SphereGeometry(.35, 32, 32);
+const sunMesh = new THREE.Mesh(sunGeo, new THREE.MeshBasicMaterial({color:0xffff88}));
+sunGroup.add(sunMesh);
+const sunGlowGeo = new THREE.SphereGeometry(.6, 32, 32);
+const sunGlow = new THREE.Mesh(sunGlowGeo, new THREE.MeshBasicMaterial({color:0xffff44, transparent:true, opacity:.18}));
+sunGroup.add(sunGlow);
+const sunGlow2 = new THREE.Mesh(new THREE.SphereGeometry(.9, 32, 32), new THREE.MeshBasicMaterial({color:0xffdd88, transparent:true, opacity:.07}));
+sunGroup.add(sunGlow2);
+scene.add(sunGroup);
+
+// 太阳标签
+const sunLabelDiv = document.createElement('div');
+sunLabelDiv.style.cssText = `font-size:14px;color:#ffee88;font-weight:bold;text-shadow:0 0 20px #ffcc44, 0 0 40px #ff8800;font-family:"Microsoft YaHei","SimSun";pointer-events:none`;
+const sunLabelObj = new CSS2DObject(sunLabelDiv);
+scene.add(sunLabelObj);
+
+// 更新太阳到黄道上的正确位置
+function updateSunPosition(ecAngle) {
+  const pos = eclipticToWorld(ecAngle, SUN_DIST);
+  sunLight.position.copy(pos);
+  sunGroup.position.copy(pos);
+  sunLabelObj.position.set(pos.x, pos.y+1.2, pos.z);
+  // 更新标签文字
+  const onEquator = (Math.abs(pos.y) < 0.15);
+  sunLabelDiv.textContent = '☀ 太阳 · '+currentJieqi + (onEquator ? ' (黄赤交点)' : '');
+}
+// 初始化太阳位置
+updateSunPosition(sunEcAngle);
+
+// ============================================================
+//  CELESTIAL SPHERE（半透明天球壳）
+// ============================================================
+const SPHERE_R = 10;
+const sphereGeo = new THREE.SphereGeometry(SPHERE_R, 72, 48);
+const sphereMat = new THREE.MeshPhysicalMaterial({
+  color:0x0a0a25, transparent:true, opacity:.07, roughness:.85,
+  metalness:0, side:THREE.DoubleSide
+});
+const celestialSphere = new THREE.Mesh(sphereGeo, sphereMat);
+scene.add(celestialSphere);
+
+// Wireframe grid on sphere (经纬线)
+const wireGeo = new THREE.SphereGeometry(SPHERE_R+0.02, 36, 24);
+const wireSphere = new THREE.Mesh(wireGeo, new THREE.MeshBasicMaterial({
+  color:0x222250, wireframe:true, transparent:true, opacity:.1
+}));
+scene.add(wireSphere);
+
+// ============================================================
+//  天轴 — 从南天极到北天极（Y轴竖直向上 = 北天极方向）
+// ============================================================
+const AXIS_H = 11;
+// 天轴杆
+const axisGeo = new THREE.CylinderGeometry(.03, .03, AXIS_H*2, 16);
+const axis = new THREE.Mesh(axisGeo, new THREE.MeshBasicMaterial({color:0x666688, transparent:true, opacity:.4}));
+scene.add(axis);
+
+// ============================================================
+//  北极星（天球顶部，世界 Y=10 处）
+// ============================================================
+const polarisGroup = new THREE.Group();
+polarisGroup.position.set(0, SPHERE_R, 0);
+
+// 主体
+const polarisCoreGeo = new THREE.SphereGeometry(.2, 32, 32);
+const polarisCore = new THREE.Mesh(polarisCoreGeo, new THREE.MeshBasicMaterial({color:0xffffff}));
+polarisGroup.add(polarisCore);
+
+// 光晕 1
+const g1Geo = new THREE.SphereGeometry(.4, 32, 32);
+const g1 = new THREE.Mesh(g1Geo, new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:.25}));
+polarisGroup.add(g1);
+
+// 光晕 2
+const g2Geo = new THREE.SphereGeometry(.7, 32, 32);
+const g2 = new THREE.Mesh(g2Geo, new THREE.MeshBasicMaterial({color:0xaaccff, transparent:true, opacity:.1}));
+polarisGroup.add(g2);
+
+// 十字光芒
+const crossGeo = new THREE.RingGeometry(.15,.8,4,1);
+const cross1 = new THREE.Mesh(crossGeo, new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:.15, side:THREE.DoubleSide}));
+cross1.rotation.z = Math.PI/4;
+polarisGroup.add(cross1);
+const cross2 = new THREE.Mesh(crossGeo.clone(), cross1.material.clone());
+cross2.rotation.z = -Math.PI/4;
+polarisGroup.add(cross2);
+
+scene.add(polarisGroup);
+
+// 北天极标记
+const npGeo = new THREE.SphereGeometry(.1, 16, 16);
+const npMark = new THREE.Mesh(npGeo, new THREE.MeshBasicMaterial({color:0xaaaacc}));
+npMark.position.set(0, AXIS_H, 0);
+scene.add(npMark);
+
+// 南天极
+const spMark = new THREE.Mesh(npGeo.clone(), new THREE.MeshBasicMaterial({color:0x333344}));
+spMark.position.set(0, -AXIS_H, 0);
+scene.add(spMark);
+
+// ============================================================
+//  赤道面（水平面 Y=0）— 自转盘 = 赤道盘 = 天盘
+// ============================================================
+const eqGroup = new THREE.Group();
+const EQ_R = 6;
+
+// 赤道圈（天球赤道，投影于天球上）
+const eqRingGeo = new THREE.TorusGeometry(SPHERE_R-0.3, .04, 16, 180);
+const eqRingMat = new THREE.MeshStandardMaterial({color:0x4488ff, emissive:0x2244aa, emissiveIntensity:.8, roughness:.25, metalness:.6});
+const eqRing = new THREE.Mesh(eqRingGeo, eqRingMat);
+eqGroup.add(eqRing);
+
+// 赤道面半透圆盘（从地球向外延展）
+const eqDiskGeo = new THREE.RingGeometry(.6, EQ_R, 80);
+const eqDisk = new THREE.Mesh(eqDiskGeo, new THREE.MeshBasicMaterial({
+  color:0x3355aa, transparent:true, opacity:.06, side:THREE.DoubleSide
+}));
+eqDisk.rotation.x = -Math.PI/2;
+eqGroup.add(eqDisk);
+
+// 赤道面的刻度圈
+const eqTickGeo = new THREE.TorusGeometry(EQ_R-0.1, .02, 8, 120);
+const eqTick = new THREE.Mesh(eqTickGeo, new THREE.MeshBasicMaterial({color:0x6699cc, transparent:true, opacity:.3}));
+eqGroup.add(eqTick);
+
+scene.add(eqGroup);
+
+// ============================================================
+//  黄道面（倾斜 23.5°）— 公转盘 = 黄道盘 = 地盘
+// ============================================================
+const ecGroup = new THREE.Group();
+ecGroup.rotation.x = OBLIQUITY; // 绕X轴倾斜
+const EC_R = 6.5;
+
+// 黄道圈（天球上）
+const ecRingGeo = new THREE.TorusGeometry(SPHERE_R-0.5, .05, 16, 180);
+const ecRingMat = new THREE.MeshStandardMaterial({color:0xff5533, emissive:0x662211, emissiveIntensity:.7, roughness:.25, metalness:.6});
+const ecRing = new THREE.Mesh(ecRingGeo, ecRingMat);
+ecGroup.add(ecRing);
+
+// 黄道面半透圆盘
+const ecDiskGeo = new THREE.RingGeometry(.6, EC_R, 80);
+const ecDisk = new THREE.Mesh(ecDiskGeo, new THREE.MeshBasicMaterial({
+  color:0x883322, transparent:true, opacity:.05, side:THREE.DoubleSide
+}));
+ecDisk.rotation.x = -Math.PI/2;
+ecGroup.add(ecDisk);
+
+// 黄道刻度圈
+const ecTickGeo = new THREE.TorusGeometry(EC_R-0.1, .02, 8, 120);
+const ecTick = new THREE.Mesh(ecTickGeo, new THREE.MeshBasicMaterial({color:0xcc6644, transparent:true, opacity:.3}));
+ecGroup.add(ecTick);
+
+scene.add(ecGroup);
+
+// ============================================================
+//  黄赤交点 — 春分 / 秋分
+// ============================================================
+function createGlowingSphere(r, color, pos) {
+  const g = new THREE.Group();
+  const core = new THREE.Mesh(new THREE.SphereGeometry(r,24,24),
+    new THREE.MeshStandardMaterial({color:color, emissive:color, emissiveIntensity:1.2, roughness:.15}));
+  g.add(core);
+  const glow = new THREE.Mesh(new THREE.SphereGeometry(r*2,24,24),
+    new THREE.MeshBasicMaterial({color:color, transparent:true, opacity:.2}));
+  g.add(glow);
+  g.position.copy(pos);
+  return g;
+}
+
+// 春分点（黄道从南向北穿过赤道 = +X 方向，赤道面上）
+const vernalPt = createGlowingSphere(.18, 0xffaa00, new THREE.Vector3(6,0,0));
+scene.add(vernalPt);
+
+// 秋分点（-X 方向）
+const autumnalPt = createGlowingSphere(.18, 0xffaa00, new THREE.Vector3(-6,0,0));
+scene.add(autumnalPt);
+
+// ============================================================
+//  赤道面上 十二地支 标记（天球赤道上的时辰标尺）
+// ============================================================
+const eqMarkers = [];
+for(let i=0; i<12; i++) {
+  // 子时在 +Z 方向（正北/下），逆时针排列（从天球北极俯视为逆时针 = 地球自西向东转）
+  // 地球自西向东转 → 从天球北极俯视，地球逆时针转 → 赤道标记逆时针排
+  const angle = (i/12)*Math.PI*2 - Math.PI/2; // 子=-90°(正Z), 逆时针递增
+  const r = EQ_R + .4;
+  const x = Math.cos(angle)*r;
+  const z = Math.sin(angle)*r;
+
+  // 发光球标记
+  const mGeo = new THREE.SphereGeometry(.1, 12, 12);
+  const m = new THREE.Mesh(mGeo, new THREE.MeshStandardMaterial({
+    color:SHICHEN_COLORS[i], emissive:SHICHEN_COLORS[i], emissiveIntensity:.5, roughness:.3
+  }));
+  m.position.set(x, 0.05, z);
+  m.userData = {shichenIndex:i, type:'eqMarker'};
+  scene.add(m);
+  eqMarkers.push(m);
+
+  // CSS2D 标签
+  const div = document.createElement('div');
+  div.textContent = DIZHI[i];
+  div.style.cssText = `font-size:13px;color:#aaccff;font-weight:bold;text-shadow:0 0 8px #4488ff;font-family:"Microsoft YaHei","SimSun";pointer-events:none`;
+  const label = new CSS2DObject(div);
+  label.position.set(Math.cos(angle)*(r+.7), .2, Math.sin(angle)*(r+.7));
+  label.userData = {type:'eqLabel'};
+  scene.add(label);
+}
+
+// ============================================================
+//  黄道面上 节气标记（简化为 12 中气）
+// ============================================================
+const JIEQI_MAJOR = ['春分','谷雨','小满','夏至','大暑','处暑','秋分','霜降','小雪','冬至','大寒','雨水'];
+function eclipticToWorld(ecAngle, r) {
+  // In ecliptic plane (before tilt): point at angle in XZ plane
+  const ex = Math.cos(ecAngle) * r;
+  const ez = Math.sin(ecAngle) * r;
+  // Rotate around X by OBLIQUITY to world coordinates
+  return new THREE.Vector3(ex, -ez*Math.sin(OBLIQUITY), ez*Math.cos(OBLIQUITY));
+}
+
+for(let i=0;i<12;i++) {
+  const ecAngle = (i/12)*Math.PI*2;
+  const pos = eclipticToWorld(ecAngle, EC_R+.3);
+
+  const mGeo = new THREE.SphereGeometry(.07, 8, 8);
+  const m = new THREE.Mesh(mGeo, new THREE.MeshStandardMaterial({
+    color:0xff8855, emissive:0x441100, emissiveIntensity:.4, roughness:.4
+  }));
+  m.position.copy(pos);
+  scene.add(m);
+
+  // Label
+  const div = document.createElement('div');
+  div.textContent = JIEQI_MAJOR[i];
+  div.style.cssText = `font-size:11px;color:#ff9977;text-shadow:0 0 6px #662211;font-family:"Microsoft YaHei","SimSun";pointer-events:none`;
+  const label = new CSS2DObject(div);
+  const lp = eclipticToWorld(ecAngle, EC_R+1);
+  label.position.copy(lp);
+  label.userData = {type:'ecLabel'};
+  scene.add(label);
+}
+
+// ============================================================
+//  地球（中心，会自转）
+// ============================================================
+const earthGroup = new THREE.Group();
+
+// 地球球体
+const earthGeo = new THREE.SphereGeometry(.5, 48, 48);
+// 用双色材质区分阴阳面：纹理贴图太复杂，改用两个半球叠加
+const earthMat = new THREE.MeshStandardMaterial({
+  color:0x4499aa, roughness:.3, metalness:.05,
+});
+const earthMesh = new THREE.Mesh(earthGeo, earthMat);
+earthGroup.add(earthMesh);
+
+// 地球自转轴（小轴，在北天极方向）
+const eAxisGeo = new THREE.CylinderGeometry(.025,.025,1.4,8);
+const eAxis = new THREE.Mesh(eAxisGeo, new THREE.MeshBasicMaterial({color:0x999999, transparent:true, opacity:.4}));
+earthGroup.add(eAxis);
+
+// 地球赤道环
+const eEqGeo = new THREE.TorusGeometry(.52, .02, 8, 40);
+const eEq = new THREE.Mesh(eEqGeo, new THREE.MeshBasicMaterial({color:0x88aacc, transparent:true, opacity:.6}));
+earthGroup.add(eEq);
+
+// 地球经线参考（0°经线标记）
+const meridianGeo = new THREE.TorusGeometry(.52, .015, 8, 4, Math.PI);
+const meridian = new THREE.Mesh(meridianGeo, new THREE.MeshBasicMaterial({color:0xffcc44, transparent:true, opacity:.7}));
+meridian.rotation.y = Math.PI/2;
+earthGroup.add(meridian);
+
+// 观测者位置标记（红色点）
+const observerGeo = new THREE.SphereGeometry(.06, 8, 8);
+const observer = new THREE.Mesh(observerGeo, new THREE.MeshBasicMaterial({color:0xff4444}));
+observer.position.set(0, .52, 0); // 赤道上
+earthGroup.add(observer);
+
+// 一条从观测者指向天空的线
+const obsLineGeo = new THREE.CylinderGeometry(.01, .01, 3, 4);
+const obsLine = new THREE.Mesh(obsLineGeo, new THREE.MeshBasicMaterial({color:0xff4444, transparent:true, opacity:.4}));
+obsLine.position.set(0, 2, 0);
+earthGroup.add(obsLine);
+
+scene.add(earthGroup);
+
+// ============================================================
+//  地面投影 — 九宫格（在赤道面上）
+// ============================================================
+const qimenProjGroup = new THREE.Group();
+qimenProjGroup.visible = showQimenProj;
+
+// 追踪九宫投影元素，用于高亮
+const qimenSquares = {};
+const qimenEdges = {};
+const qimenLabels = {};
+
+const luoshuPos = {
+  4:[-2, 0.03, -2], 9:[0, 0.03, -2], 2:[2, 0.03, -2],
+  3:[-2, 0.03,  0], 5:[0, 0.03,  0], 7:[2, 0.03,  0],
+  8:[-2, 0.03,  2], 1:[0, 0.03,  2], 6:[2, 0.03,  2]
+};
+
+for(const [p, pos] of Object.entries(luoshuPos)) {
+  const pi = parseInt(p);
+  const s = .85;
+  // 地面方块 — 更明显
+  const sqGeo = new THREE.PlaneGeometry(s,s);
+  const sq = new THREE.Mesh(sqGeo, new THREE.MeshBasicMaterial({
+    color:0x336699, transparent:true, opacity:.28, side:THREE.DoubleSide
+  }));
+  sq.rotation.x = -Math.PI/2;
+  sq.position.set(pos[0], pos[1], pos[2]);
+  sq.userData = {palace:pi, type:'qimenBase'};
+  qimenProjGroup.add(sq);
+  qimenSquares[pi] = sq;
+
+  // 边框 — 更亮
+  const edgeGeo = new THREE.EdgesGeometry(sqGeo);
+  const edge = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({
+    color:0x55aacc, transparent:true, opacity:.55
+  }));
+  edge.rotation.x = -Math.PI/2;
+  edge.position.copy(sq.position);
+  qimenProjGroup.add(edge);
+  qimenEdges[pi] = edge;
+
+  // 宫号标签
+  const div = document.createElement('div');
+  div.textContent = p + '·'+ (QIMEN_EARTH[p]||'');
+  div.style.cssText = `font-size:14px;color:#88ccff;font-weight:bold;text-shadow:0 0 12px #4488cc;font-family:"Microsoft YaHei","SimSun";pointer-events:none`;
+  const label = new CSS2DObject(div);
+  label.position.set(pos[0], 0.15, pos[2]);
+  label.userData = {type:'qimenLabel', palace:pi};
+  qimenProjGroup.add(label);
+  qimenLabels[pi] = label;
+}
+
+scene.add(qimenProjGroup);
+
+// ============================================================
+//  垂直投影线（黄道→赤道，春夏秋冬四个点）
+// ============================================================
+function addDashedLine(a, b, color) {
+  const pts = [];
+  const segs = 10;
+  for(let i=0;i<=segs;i++) {
+    const t=i/segs;
+    pts.push(new THREE.Vector3().lerpVectors(a,b,t));
+  }
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  const mat = new THREE.LineDashedMaterial({color:color, dashSize:.4, gapSize:.25, transparent:true, opacity:.25});
+  const line = new THREE.Line(geo, mat);
+  line.computeLineDistances();
+  scene.add(line);
+  return line;
+}
+
+// 夏至（黄道最高点）→ 赤道投影
+const xzPt = eclipticToWorld(Math.PI/2, EC_R);
+const xzProj = new THREE.Vector3(xzPt.x, 0, xzPt.z);
+addDashedLine(xzPt, xzProj, 0x996633);
+
+// 冬至（黄道最低点）→ 赤道投影
+const dzPt = eclipticToWorld(Math.PI*1.5, EC_R);
+const dzProj = new THREE.Vector3(dzPt.x, 0, dzPt.z);
+addDashedLine(dzPt, dzProj, 0x996633);
+
+// ============================================================
+//  UI — 时辰列表
+// ============================================================
+function buildShichenList() {
+  const list = document.getElementById('shichenList');
+  list.innerHTML = '';
+  for(let i=0;i<12;i++) {
+    const d = document.createElement('div');
+    d.className = 'shichen-item';
+    d.textContent = DIZHI[i]+'时 ('+SHICHEN_TIME[i]+')';
+    d.onclick = ()=>jumpToShichen(i);
+    d.dataset.index = i;
+    list.appendChild(d);
+  }
+}
+buildShichenList();
+function updateShichenList() {
+  document.querySelectorAll('.shichen-item').forEach(el => {
+    const idx = parseInt(el.dataset.index);
+    el.classList.toggle('active', idx===shichenIndex);
+  });
+}
+
+// ============================================================
+//  UI — 九宫天盘
+// ============================================================
+function updateQimenOverlay() {
+  const grid = document.getElementById('qimenGrid');
+  const order = [4,9,2,3,5,7,8,1,6];
+  let html = '';
+  // Heaven plate for current shichen (simple rotation model)
+  // Each shichen = +30° rotation → heaven stems rotate by 2 palaces forward
+  const offset = shichenIndex; // simple mapping
+  const heavenStems = {};
+  for(let p=1;p<=9;p++) {
+    // heaven stem rotates: find earth stem at (p - offset) mod 9+1 in luoshu
+    // This is a simplified rotation model
+    const srcP = ((p-1 - offset + 9)%9)+1;
+    heavenStems[p] = QIMEN_EARTH[srcP] || '';
+  }
+
+  for(const p of order) {
+    const hs = heavenStems[p] || '';
+    const door = QIMEN_DOOR[QIMEN_EARTH[p]] || '';
+    const isZhiFu = (p === ((shichenIndex%9)+1));
+    html += `<div class="qimen-cell${isZhiFu?' hl':''}">
+      <span style="font-size:8px;color:#445566">${p}</span>
+      <span class="qs">${hs||'·'}</span>
+      <span class="qd">${door||'·'}</span>
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+// ============================================================
+//  CORE LOGIC — 时辰与地球自转
+// ============================================================
+function earthAngleForShichen(idx) {
+  // 子时=0°, 每时辰+30° (逆时针，从上往下看)
+  return idx * ONE_SHI_CHEN_DEG;
+}
+
+function setShichen(idx) {
+  shichenIndex = ((idx%12)+12)%12;
+  earthRotation = earthAngleForShichen(shichenIndex);
+  earthGroup.rotation.y = earthRotation;
+  updateAllUI();
+}
+
+function updateAllUI() {
+  // Info panel
+  document.getElementById('infoShichen').textContent = DIZHI[shichenIndex]+'时 ('+SHICHEN_TIME[shichenIndex]+'h)';
+  document.getElementById('infoAngle').textContent = (shichenIndex*30)+'°';
+  document.getElementById('infoLon').textContent = DIZHI[shichenIndex]+'方 / '+(shichenIndex*30)+'°E';
+  document.getElementById('infoOffset').textContent = '偏移 '+shichenIndex+' 宫';
+  document.getElementById('infoJieqi').textContent = currentJieqi;
+  document.getElementById('infoSunAngle').textContent = Math.round(sunEcAngle*180/Math.PI)+'°';
+
+  updateShichenList();
+  updateQimenOverlay();
+  highlightEarthMarker();
+  highlightQimenProjection();
+}
+
+function setJieqi(jieqiName) {
+  currentJieqi = jieqiName;
+  sunEcAngle = JIEQI_SUN_ANGLE[jieqiName];
+  updateSunPosition(sunEcAngle);
+  updateAllUI();
+}
+
+function highlightQimenProjection() {
+  // 高亮当前时辰对应的九宫投影格
+  const activeP = ((shichenIndex % 9) + 1);
+  for(let p=1; p<=9; p++) {
+    if(qimenSquares[p]) {
+      const isActive = (p === activeP);
+      qimenSquares[p].material.opacity = isActive ? 0.55 : 0.28;
+      qimenSquares[p].material.color.set(isActive ? 0x44aadd : 0x336699);
+      qimenEdges[p].material.color.set(isActive ? 0x88ddff : 0x55aacc);
+      qimenEdges[p].material.opacity = isActive ? 0.8 : 0.55;
+      if(qimenLabels[p]) {
+        qimenLabels[p].element.style.color = isActive ? '#ffdd88' : '#88ccff';
+        qimenLabels[p].element.style.textShadow = isActive ? '0 0 16px #ffaa44' : '0 0 12px #4488cc';
+      }
+    }
+  }
+}
+
+function highlightEarthMarker() {
+  // Highlight the equatorial marker for current shichen
+  eqMarkers.forEach((m,i) => {
+    const isActive = (i===shichenIndex);
+    m.material.emissiveIntensity = isActive ? 1.2 : .5;
+    m.scale.setScalar(isActive ? 1.8 : 1);
+    // 发出光芒
+    if(isActive) {
+      m.material.color.set(0xffff88);
+      m.material.emissive.set(0xffcc44);
+    } else {
+      m.material.color.set(SHICHEN_COLORS[i]);
+      m.material.emissive.set(SHICHEN_COLORS[i]);
+    }
+  });
+}
+
+// ============================================================
+//  PLAY CONTROLS
+// ============================================================
+function stepForward() {
+  stopPlay();
+  setShichen(shichenIndex+1);
+}
+function stepBack() {
+  stopPlay();
+  setShichen(shichenIndex-1);
+}
+function jumpToShichen(idx) {
+  stopPlay();
+  setShichen(idx);
+}
+
+function togglePlay() {
+  isPlaying ? stopPlay() : startPlay();
+}
+function startPlay() {
+  isPlaying = true;
+  document.getElementById('btnPlay').textContent = '⏸ 暂停';
+  document.getElementById('btnPlay').classList.add('active');
+  schedulePlay();
+}
+function stopPlay() {
+  isPlaying = false;
+  document.getElementById('btnPlay').textContent = '▶ 播放一日';
+  document.getElementById('btnPlay').classList.remove('active');
+  if(playTimer) clearTimeout(playTimer);
+}
+function schedulePlay() {
+  if(!isPlaying) return;
+  const ms = Math.max(150, 2000 - playSpeed*95);
+  playTimer = setTimeout(() => {
+    setShichen(shichenIndex+1);
+    schedulePlay();
+  }, ms);
+}
+function updateSpeed() {
+  playSpeed = parseInt(document.getElementById('speedSlider').value);
+  if(isPlaying) { clearTimeout(playTimer); schedulePlay(); }
+}
+
+function zoomIn() {
+  const dist = camera.position.length();
+  const newDist = Math.max(3, dist * 0.82);
+  camera.position.normalize().multiplyScalar(newDist);
+}
+
+function zoomOut() {
+  const dist = camera.position.length();
+  const newDist = Math.min(22, dist * 1.22);
+  camera.position.normalize().multiplyScalar(newDist);
+}
+
+function toggleView() {
+  if(viewMode==='side') {
+    viewMode = 'top';
+    document.getElementById('btnView').textContent = '↔ 侧视';
+    animateCam(new THREE.Vector3(0,14,.1), new THREE.Vector3(0,0,0));
+  } else {
+    viewMode = 'side';
+    document.getElementById('btnView').textContent = '⬆ 覆盘视角';
+    animateCam(new THREE.Vector3(6,7,12), new THREE.Vector3(0,0,0));
+  }
+}
+
+function toggleQimen() {
+  showQimenProj = !showQimenProj;
+  qimenProjGroup.visible = showQimenProj;
+  document.getElementById('btnQimen').classList.toggle('active', showQimenProj);
+}
+
+function resetEarth() {
+  stopPlay();
+  setShichen(0);
+}
+
+function animateCam(targetPos, targetLook) {
+  const sp = camera.position.clone();
+  const st = controls.target.clone();
+  const t0 = Date.now();
+  const dur = 1000;
+  function step() {
+    const t = Math.min((Date.now()-t0)/dur,1);
+    const e = t<.5 ? 2*t*t : -1+(4-2*t)*t;
+    camera.position.lerpVectors(sp, targetPos, e);
+    controls.target.lerpVectors(st, targetLook, e);
+    controls.update();
+    if(t<1) requestAnimationFrame(step);
+  }
+  step();
+}
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight') stepForward();
+  else if(e.key==='ArrowLeft') stepBack();
+  else if(e.key===' ') { e.preventDefault(); togglePlay(); }
+  else if(e.key==='r'||e.key==='R') resetEarth();
+  else if(e.key==='v'||e.key==='V') toggleView();
+});
+
+// ============================================================
+//  RENDER LOOP
+// ============================================================
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  const t = performance.now()*.001;
+
+  controls.update();
+
+  // Polaris pulse
+  const pulse = 1+Math.sin(t*2.2)*.12;
+  polarisGroup.children[1].scale.setScalar(pulse);
+  polarisGroup.children[2].scale.setScalar(pulse*1.05);
+  polarisGroup.children[3].scale.setScalar(pulse);
+  polarisGroup.children[4].scale.setScalar(pulse);
+
+  // Halo rotation
+  polarisGroup.children[3].rotation.z += dt*.3;
+  polarisGroup.children[4].rotation.z -= dt*.25;
+
+  // Sun glow pulse
+  const sunPulse = 1+Math.sin(t*1.8)*.08;
+  sunGroup.children[1].scale.setScalar(sunPulse);
+  sunGroup.children[2].scale.setScalar(sunPulse*1.1);
+
+  // Stars gentle rotation
+  stars.rotation.y += dt*.015;
+
+  // Smooth earth rotation towards target
+  const targetAngle = earthAngleForShichen(shichenIndex);
+  const currentAngle = earthGroup.rotation.y;
+  // Normalize difference
+  let diff = targetAngle - currentAngle;
+  // Wrap to [-PI, PI]
+  while(diff > Math.PI) diff -= Math.PI*2;
+  while(diff < -Math.PI) diff += Math.PI*2;
+  // Smooth approach
+  earthGroup.rotation.y += diff * Math.min(dt*5, 1);
+
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+setShichen(0);
+updateQimenOverlay();
+
+// Resize
+window.addEventListener('resize',()=>{
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Expose functions to window for inline onclick handlers (module scope fix)
+window.togglePlay = togglePlay;
+window.stepForward = stepForward;
+window.stepBack = stepBack;
+window.jumpToShichen = jumpToShichen;
+window.updateSpeed = updateSpeed;
+window.zoomIn = zoomIn;
+window.zoomOut = zoomOut;
+window.toggleView = toggleView;
+window.toggleQimen = toggleQimen;
+window.resetEarth = resetEarth;
+window.setJieqi = setJieqi;
+
+animate();
+
+console.log('🌍 奇门遁甲 · 一日自转动画已就绪');
+console.log('操作：← → 切换时辰 | 空格 播放/暂停 | V 切换视角 | R 重置');
+console.log('黄赤交角：'+ (OBLIQUITY*180/Math.PI).toFixed(1)+'°');
+</script>
+</body>
+</html>

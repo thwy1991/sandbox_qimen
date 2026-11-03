@@ -1,0 +1,229 @@
+{
+  "id": "qimen_20260609_1400",
+  "datetime": "2026-06-09T14:00:00",
+  "pan": {
+    "chart_info": {
+      "time": "丙午年 甲午月 甲寅日 辛未时",
+      "jieqi": "芒种",
+      "dun": "阳",
+      "bureau": "阳遁3局",
+      "yuan": "中元",
+      "xun_shou_gan": "戊",
+      "zhi_fu_star": "天冲",
+      "zhi_fu_pos": 3,
+      "zhi_fu_heaven_pos": 6,
+      "zhi_shi_door": "伤门",
+      "zhi_shi_pos": 1,
+      "kong_pair": [
+        "戌",
+        "亥"
+      ],
+      "kong_palaces": [
+        6
+      ],
+      "ma_zhi": "巳",
+      "ma_palace": 4
+    },
+    "di_pan": {
+      "3": "戊",
+      "4": "己",
+      "5": "庚",
+      "6": "辛",
+      "7": "壬",
+      "8": "癸",
+      "9": "丁",
+      "1": "丙",
+      "2": "乙"
+    },
+    "earth_jigan": {
+      "2": "庚"
+    },
+    "hv_stems": {
+      "6": "戊",
+      "1": "己",
+      "8": "丁",
+      "3": "乙",
+      "4": "壬",
+      "9": "辛",
+      "2": "丙",
+      "7": "癸",
+      "5": "丙"
+    },
+    "jigan_stems": {
+      "3": "庚"
+    },
+    "hv_stars": {
+      "1": "天辅",
+      "2": "天蓬",
+      "3": "天芮",
+      "4": "天柱",
+      "5": "天蓬",
+      "6": "天冲",
+      "7": "天任",
+      "8": "天英",
+      "9": "天心"
+    },
+    "hv_stars_jigan": {
+      "3": "天禽"
+    },
+    "palace_doors": {
+      "1": "伤门",
+      "8": "杜门",
+      "3": "景门",
+      "4": "死门",
+      "9": "惊门",
+      "2": "开门",
+      "7": "休门",
+      "6": "生门",
+      "5": "开门"
+    },
+    "palace_gods": {
+      "6": "值符",
+      "1": "腾蛇",
+      "8": "太阴",
+      "3": "六合",
+      "4": "白虎",
+      "9": "玄武",
+      "2": "九地",
+      "7": "九天",
+      "5": "九地"
+    },
+    "earth_gods": {
+      "3": "值符",
+      "4": "腾蛇",
+      "9": "太阴",
+      "2": "六合",
+      "7": "白虎",
+      "6": "玄武",
+      "1": "九地",
+      "8": "九天",
+      "5": "六合"
+    }
+  },
+  "pan_summary": {
+    "dun_type": "阳遁",
+    "bureau_num": 3,
+    "zhi_fu": {
+      "star": "天冲",
+      "origin_palace": 3,
+      "heaven_palace": 6
+    },
+    "zhi_shi": {
+      "door": "伤门",
+      "palace": 1
+    },
+    "kong_palaces": [
+      6
+    ],
+    "ma_palace": 4,
+    "palaces": [
+      {
+        "palace": 1,
+        "dir": "坎",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "值使宫"
+      },
+      {
+        "palace": 2,
+        "dir": "坤",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 3,
+        "dir": "震",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 4,
+        "dir": "巽",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "驿马"
+      },
+      {
+        "palace": 6,
+        "dir": "乾",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡，天盘值符宫"
+      },
+      {
+        "palace": 7,
+        "dir": "兑",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 8,
+        "dir": "艮",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 9,
+        "dir": "离",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      }
+    ]
+  },
+  "context": {
+    "market": "",
+    "time_range": "",
+    "direction": "",
+    "specific_target": "",
+    "notes": ""
+  },
+  "analysis": "（请填写分析过程）",
+  "outcome": {
+    "predicted": "",
+    "actual": "",
+    "accuracy": "",
+    "key_turning_point": "",
+    "deviation_reason": ""
+  },
+  "insights": "此局又多个看点；开门奇门临九地，这是上涨信号，时干辛金落离宫成辛+丁的经商获利局；代表风险的白虎位于巽宫，孤虚法中的虚位，代表风险的庚金临乙奇，上乘六合，贪合忘克，所以风险因素被消灭，开盘暴力拉升，在这个时辰中无明显回调",
+  "tags": [],
+  "rating": 0,
+  "created_at": "2026-06-13T11:18:41"
+}

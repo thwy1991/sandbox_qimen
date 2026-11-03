@@ -1,0 +1,231 @@
+{
+  "id": "qimen_20260628_1500",
+  "datetime": "2026-06-28T15:00:00",
+  "pan": {
+    "chart_info": {
+      "time": "丙午年 甲午月 癸酉日 庚申时",
+      "jieqi": "夏至",
+      "dun": "阴",
+      "bureau": "阴遁3局",
+      "yuan": "中元",
+      "xun_shou_gan": "癸",
+      "zhi_fu_star": "天柱",
+      "zhi_fu_pos": 7,
+      "zhi_fu_heaven_pos": 1,
+      "zhi_shi_door": "惊门",
+      "zhi_shi_pos": 1,
+      "kong_pair": [
+        "子",
+        "丑"
+      ],
+      "kong_palaces": [
+        8,
+        1
+      ],
+      "ma_zhi": "寅",
+      "ma_palace": 8
+    },
+    "di_pan": {
+      "3": "戊",
+      "2": "己",
+      "1": "庚",
+      "9": "辛",
+      "8": "壬",
+      "7": "癸",
+      "6": "丁",
+      "5": "丙",
+      "4": "乙"
+    },
+    "earth_jigan": {
+      "2": "丙"
+    },
+    "hv_stems": {
+      "1": "癸",
+      "8": "丁",
+      "3": "庚",
+      "4": "壬",
+      "9": "戊",
+      "2": "乙",
+      "7": "辛",
+      "6": "己",
+      "5": "乙"
+    },
+    "jigan_stems": {
+      "6": "丙"
+    },
+    "hv_stars": {
+      "1": "天柱",
+      "2": "天辅",
+      "3": "天蓬",
+      "4": "天任",
+      "5": "天辅",
+      "6": "天芮",
+      "7": "天英",
+      "8": "天心",
+      "9": "天冲"
+    },
+    "hv_stars_jigan": {
+      "6": "天禽"
+    },
+    "palace_doors": {
+      "1": "惊门",
+      "8": "开门",
+      "3": "休门",
+      "4": "生门",
+      "9": "伤门",
+      "2": "杜门",
+      "7": "景门",
+      "6": "死门",
+      "5": "杜门"
+    },
+    "palace_gods": {
+      "1": "值符",
+      "6": "腾蛇",
+      "7": "太阴",
+      "2": "六合",
+      "9": "白虎",
+      "4": "玄武",
+      "3": "九地",
+      "8": "九天",
+      "5": "六合"
+    },
+    "earth_gods": {
+      "7": "值符",
+      "2": "腾蛇",
+      "9": "太阴",
+      "4": "六合",
+      "3": "白虎",
+      "8": "玄武",
+      "1": "九地",
+      "6": "九天",
+      "5": "腾蛇"
+    }
+  },
+  "pan_summary": {
+    "dun_type": "阴遁",
+    "bureau_num": 3,
+    "zhi_fu": {
+      "star": "天柱",
+      "origin_palace": 7,
+      "heaven_palace": 1
+    },
+    "zhi_shi": {
+      "door": "惊门",
+      "palace": 1
+    },
+    "kong_palaces": [
+      8,
+      1
+    ],
+    "ma_palace": 8,
+    "palaces": [
+      {
+        "palace": 1,
+        "dir": "坎",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡，值使宫，天盘值符宫"
+      },
+      {
+        "palace": 2,
+        "dir": "坤",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 3,
+        "dir": "震",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 4,
+        "dir": "巽",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 6,
+        "dir": "乾",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 7,
+        "dir": "兑",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 8,
+        "dir": "艮",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡，驿马"
+      },
+      {
+        "palace": 9,
+        "dir": "离",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      }
+    ]
+  },
+  "context": {
+    "market": "",
+    "time_range": "",
+    "direction": "",
+    "specific_target": "",
+    "notes": ""
+  },
+  "analysis": "（请填写分析过程）",
+  "outcome": {
+    "predicted": "",
+    "actual": "",
+    "accuracy": "",
+    "key_turning_point": "",
+    "deviation_reason": ""
+  },
+  "insights": "（请填写心得感悟）",
+  "tags": [],
+  "rating": 0,
+  "created_at": "2026-06-28T15:13:51"
+}

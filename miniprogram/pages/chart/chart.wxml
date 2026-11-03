@@ -1,0 +1,141 @@
+<!--pages/chart/chart.wxml-->
+<view class="container">
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">正在排盘...</text>
+  </view>
+
+  <!-- 错误 -->
+  <view wx:elif="{{error}}" class="error-view">
+    <text class="error-text">{{errorMsg}}</text>
+    <button class="btn-primary" bindtap="onRetry">重试</button>
+  </view>
+
+  <!-- 排盘结果 -->
+  <block wx:else>
+
+    <!-- 头部信息 -->
+    <view class="card info-card">
+      <view class="info-title">{{chartData.datetime.str}}</view>
+      <view class="info-sizhu">{{chartData.sizhu.str}}</view>
+      <view class="info-row">
+        <text class="info-label">节气</text>
+        <text class="info-value">{{chartData.jieqi}}（{{chartData.yuan}}）</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">局数</text>
+        <text class="info-value">{{chartData.bureau_str}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">旬首</text>
+        <text class="info-value">{{chartData.xun_shou_full}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">值符</text>
+        <text class="info-value">{{chartData.zhi_fu_star}}落{{chartData.zhi_fu_heaven_pos}}宫</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">值使</text>
+        <text class="info-value">{{chartData.zhi_shi_door}}落{{chartData.zhi_shi_pos}}宫</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">旬空</text>
+        <text class="info-value">{{chartData.kong_pair[0]}}{{chartData.kong_pair[1]}}（<block wx:for="{{chartData.kong_palaces}}" wx:key="*this">{{item}}宫</block>）</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">驿马</text>
+        <text class="info-value">{{chartData.ma_zhi}}（{{chartData.ma_palace}}宫）</text>
+      </view>
+    </view>
+
+    <!-- 九宫格 -->
+    <view class="jiugong-grid">
+      <block wx:for="{{gridCells}}" wx:for-item="row" wx:for-index="rowIdx" wx:key="rowIdx">
+        <view class="grid-row">
+          <block wx:for="{{row}}" wx:for-item="cell" wx:for-index="colIdx" wx:key="colIdx">
+
+            <!-- 中宫 -->
+            <view wx:if="{{cell.is_center}}" class="grid-cell center-cell">
+              <view class="cell-center-stem">{{cell.di_pan_stem}}</view>
+              <view class="cell-palace-num">{{cell.palace}}</view>
+            </view>
+
+            <!-- 普通宫 -->
+            <view wx:else class="grid-cell {{cell.is_zhi_fu ? 'zhi-fu-cell' : ''}} {{cell.is_zhi_shi ? 'zhi-shi-cell' : ''}}">
+              <!-- 右上角标记 -->
+              <view class="cell-marks">
+                <text wx:if="{{cell.is_kong}}" class="mark-kong">○</text>
+                <text wx:if="{{cell.is_ma}}" class="mark-ma">马</text>
+              </view>
+
+              <!-- 天盘八神 -->
+              <view class="cell-god">{{cell.god}}</view>
+
+              <!-- 天盘星+天盘干 -->
+              <view class="cell-star-row">
+                <text class="cell-star {{cell.is_zhi_fu ? 'star-red' : ''}}">{{cell.hv_star}}</text>
+                <text wx:if="{{cell.jigan_star}}" class="cell-jigan-star">{{cell.jigan_star}}</text>
+                <text class="cell-hv-stem {{cell.is_zhi_fu ? 'stem-red' : ''}}">{{cell.hv_stem}}</text>
+                <text wx:if="{{cell.jigan_stem}}" class="cell-jigan-stem">{{cell.jigan_stem}}</text>
+              </view>
+
+              <!-- 门+地盘干 -->
+              <view class="cell-door-row">
+                <text class="cell-door {{cell.is_zhi_shi ? 'door-red' : ''}}">{{cell.door}}</text>
+                <text class="cell-dp-stem">{{cell.di_pan_stem}}</text>
+                <text wx:if="{{cell.earth_jigan}}" class="cell-earth-jigan">{{cell.earth_jigan}}</text>
+              </view>
+
+              <!-- 分割线 -->
+              <view class="cell-divider"></view>
+
+              <!-- 底部：地盘八神+标记 -->
+              <view class="cell-bottom">
+                <text class="cell-earth-god">{{cell.earth_god}}</text>
+                <view class="cell-bottom-marks">
+                  <text wx:if="{{cell.is_zhi_fu}}" class="mark-zf">值符★</text>
+                  <text wx:if="{{cell.is_zhi_shi}}" class="mark-zs">值使◆</text>
+                </view>
+              </view>
+
+              <!-- 宫号 -->
+              <view class="cell-palace-num">{{cell.palace}}</view>
+            </view>
+
+          </block>
+        </view>
+      </block>
+    </view>
+
+    <!-- 图例说明 -->
+    <view class="card legend-card">
+      <view class="section-title">图例说明</view>
+      <view class="legend-row">
+        <text class="legend-red">红色</text>
+        <text class="legend-text">值符星/值使门/天盘干</text>
+      </view>
+      <view class="legend-row">
+        <text class="legend-blue">蓝色</text>
+        <text class="legend-text">寄干/寄星（天禽跟随天芮）</text>
+      </view>
+      <view class="legend-row">
+        <text class="legend-mark">○</text>
+        <text class="legend-text">空亡宫位</text>
+      </view>
+      <view class="legend-row">
+        <text class="legend-ma">马</text>
+        <text class="legend-text">驿马所在宫位</text>
+      </view>
+      <view class="legend-row">
+        <text class="legend-text">★值符 ◆值使</text>
+        <text class="legend-text">当值星门标记</text>
+      </view>
+    </view>
+
+    <!-- 返回按钮 -->
+    <button class="btn-primary btn-back" bindtap="onBack">返回排盘</button>
+
+  </block>
+</view>

@@ -1,0 +1,93 @@
+{
+  "id": "qimen_20260610_1400",
+  "datetime": "2026-06-10T14:00:00",
+  "pan": {
+    "chart_info": {
+      "time": "丙午年 甲午月 乙卯日 癸未时",
+      "jieqi": "芒种",
+      "dun": "阳",
+      "bureau": "阳遁3局",
+      "yuan": "中元",
+      "xun_shou_gan": "己",
+      "zhi_fu_star": "天辅",
+      "zhi_fu_pos": 4,
+      "zhi_fu_heaven_pos": 8,
+      "zhi_shi_door": "杜门",
+      "zhi_shi_pos": 4,
+      "kong_pair": ["申", "酉"],
+      "kong_palaces": [2, 7],
+      "ma_zhi": "巳",
+      "ma_palace": 4
+    },
+    "di_pan": {
+      "1": "丙", "2": "乙", "3": "戊", "4": "己", "5": "庚",
+      "6": "辛", "7": "壬", "8": "癸", "9": "丁"
+    },
+    "earth_jigan": {
+      "2": "庚"
+    },
+    "hv_stems": {
+      "1": "戊", "2": "辛", "3": "丁", "4": "乙", "5": "辛",
+      "6": "癸", "7": "丙", "8": "己", "9": "壬"
+    },
+    "jigan_stems": {
+      "4": "庚"
+    },
+    "hv_stars": {
+      "1": "天冲", "2": "天心", "3": "天英", "4": "天芮", "5": "天心",
+      "6": "天任", "7": "天蓬", "8": "天辅", "9": "天柱"
+    },
+    "hv_stars_jigan": {
+      "4": "天禽"
+    },
+    "palace_doors": {
+      "1": "休门", "2": "死门", "3": "伤门", "4": "杜门", "5": "死门",
+      "6": "开门", "7": "惊门", "8": "生门", "9": "景门"
+    },
+    "palace_gods": {
+      "1": "九天", "2": "白虎", "3": "腾蛇", "4": "太阴", "5": "白虎",
+      "6": "九地", "7": "玄武", "8": "值符", "9": "六合"
+    },
+    "earth_gods": {
+      "1": "玄武", "2": "太阴", "3": "九天", "4": "值符", "5": "太阴",
+      "6": "白虎", "7": "六合", "8": "九地", "9": "腾蛇"
+    }
+  },
+  "pan_summary": {
+    "dun_type": "阳遁",
+    "bureau_num": 3,
+    "zhi_fu": {"star": "天辅", "origin_palace": 4, "heaven_palace": 8},
+    "zhi_shi": {"door": "杜门", "palace": 4},
+    "kong_palaces": [2, 7],
+    "ma_palace": 4,
+    "palaces": [
+      {"palace": 1, "dir": "坎", "di_gan": "丙", "tian_gan": "戊", "star": "天冲", "door": "休门", "god": "九天", "jigan": null, "note": ""},
+      {"palace": 2, "dir": "坤", "di_gan": "乙", "tian_gan": "辛", "star": "天心", "door": "死门", "god": "白虎", "jigan": "庚", "note": "空亡"},
+      {"palace": 3, "dir": "震", "di_gan": "戊", "tian_gan": "丁", "star": "天英", "door": "伤门", "god": "腾蛇", "jigan": null, "note": ""},
+      {"palace": 4, "dir": "巽", "di_gan": "己", "tian_gan": "乙", "star": "天芮+天禽", "door": "杜门", "god": "太阴", "jigan": "庚", "note": "值使宫+驿马"},
+      {"palace": 6, "dir": "乾", "di_gan": "辛", "tian_gan": "癸", "star": "天任", "door": "开门", "god": "九地", "jigan": null, "note": ""},
+      {"palace": 7, "dir": "兑", "di_gan": "壬", "tian_gan": "丙", "star": "天蓬", "door": "惊门", "god": "玄武", "jigan": null, "note": "空亡"},
+      {"palace": 8, "dir": "艮", "di_gan": "癸", "tian_gan": "己", "star": "天辅", "door": "生门", "god": "值符", "jigan": null, "note": "天盘值符宫"},
+      {"palace": 9, "dir": "离", "di_gan": "丁", "tian_gan": "壬", "star": "天柱", "door": "景门", "god": "六合", "jigan": null, "note": ""}
+    ]
+  },
+  "context": {
+    "market": "",
+    "time_range": "14:00-15:00",
+    "direction": "",
+    "specific_target": "",
+    "notes": ""
+  },
+  "analysis": "（请在此填写你当时对该盘的完整分析，包括观察到的格局、信号、判断逻辑等）",
+  "outcome": {
+    "predicted": "（你当时的预测判断）",
+    "actual": "（实际走势如何，尽量包含时间和幅度）",
+    "accuracy": "准确｜基本准确｜偏误｜完全错误｜待验证",
+    "key_turning_point": "（关键转折时间点，如有）",
+    "deviation_reason": "（如果判断有偏差，分析偏差原因）"
+  },
+  "insights": "我用该局观察了沪镍的行情，这一局，开盘后价格一直下跌，所以最关心的是会不会有转折，注意到该盘的值符宫喜忧参办半，天辅吉星，生门吉门；但格局为己+癸为地刑玄武不佳。但2点左右，到了巽宫，出现马星，马星是变动的象征；另一个就是庚金也落在巽宫，这说明时间在近盘是阻力压力风险，但马星的出现改变了这个局面，从2点开始v形反转，大涨",
+  "tags": ["阳遁", "芒种", "值符临生门", "旬空坤兑", "驿马临值使"],
+  "rating": 0,
+  "created_at": "2026-06-10T20:48:00"
+}

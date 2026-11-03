@@ -1,0 +1,305 @@
+/* pages/chart/chart.wxss */
+.container {
+  padding: 16rpx;
+}
+
+/* ── 加载 ── */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #D4B996;
+  border-top: 6rpx solid #8B4513;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 24rpx;
+  font-size: 28rpx;
+  color: #8B4513;
+}
+
+/* ── 错误 ── */
+.error-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 0;
+}
+
+.error-text {
+  font-size: 28rpx;
+  color: #C0392B;
+  margin-bottom: 30rpx;
+}
+
+/* ── 头部信息卡 ── */
+.info-card {
+  width: 100%;
+}
+
+.info-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #8B4513;
+  text-align: center;
+  margin-bottom: 8rpx;
+}
+
+.info-sizhu {
+  font-size: 30rpx;
+  color: #A0522D;
+  text-align: center;
+  margin-bottom: 16rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 1rpx solid #E8D5C0;
+}
+
+/* ── 九宫格 ── */
+.jiugong-grid {
+  width: 100%;
+  margin: 20rpx 0;
+  border: 4rpx solid #6B4210;
+  border-radius: 4rpx;
+  background: #6B4210;
+}
+
+.grid-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.grid-cell {
+  flex: 1;
+  background: #E8C8A0;
+  border: 2rpx solid #8B6914;
+  padding: 12rpx 10rpx;
+  position: relative;
+  min-height: 200rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.center-cell {
+  background: #D4A868;
+  justify-content: center;
+  align-items: center;
+}
+
+.cell-center-stem {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 值符/值使宫高亮 */
+.zhi-fu-cell {
+  background: #F0DAB0;
+}
+
+.zhi-shi-cell {
+  background: #F0DAB0;
+}
+
+/* 右上角标记 */
+.cell-marks {
+  position: absolute;
+  top: 6rpx;
+  right: 8rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.mark-kong {
+  font-size: 24rpx;
+  color: #2980B9;
+  margin-right: 4rpx;
+}
+
+.mark-ma {
+  font-size: 22rpx;
+  color: #27AE60;
+  font-weight: bold;
+}
+
+/* 天盘八神 */
+.cell-god {
+  font-size: 26rpx;
+  color: #333;
+  margin-bottom: 4rpx;
+}
+
+/* 天盘星+天盘干 */
+.cell-star-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 4rpx;
+}
+
+.cell-star {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.star-red {
+  color: #C0392B;
+}
+
+.cell-jigan-star {
+  font-size: 24rpx;
+  color: #2980B9;
+  margin-left: 4rpx;
+}
+
+.cell-hv-stem {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-left: auto;
+}
+
+.stem-red {
+  color: #C0392B;
+}
+
+.cell-jigan-stem {
+  font-size: 28rpx;
+  color: #2980B9;
+  margin-left: 4rpx;
+}
+
+/* 门+地盘干 */
+.cell-door-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 4rpx;
+}
+
+.cell-door {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.door-red {
+  color: #C0392B;
+}
+
+.cell-dp-stem {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-left: auto;
+}
+
+.cell-earth-jigan {
+  font-size: 28rpx;
+  color: #2980B9;
+  margin-left: 4rpx;
+}
+
+/* 分割线 */
+.cell-divider {
+  border-top: 1rpx solid #8B6914;
+  margin: 4rpx 0;
+}
+
+/* 底部 */
+.cell-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cell-earth-god {
+  font-size: 26rpx;
+  color: #333;
+}
+
+.cell-bottom-marks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.mark-zf {
+  font-size: 20rpx;
+  color: #2980B9;
+}
+
+.mark-zs {
+  font-size: 20rpx;
+  color: #2980B9;
+}
+
+/* 宫号 */
+.cell-palace-num {
+  position: absolute;
+  bottom: 4rpx;
+  right: 8rpx;
+  font-size: 22rpx;
+  color: #8B6914;
+}
+
+/* ── 图例 ── */
+.legend-card {
+  width: 100%;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 0;
+  font-size: 26rpx;
+}
+
+.legend-red {
+  color: #C0392B;
+  font-weight: bold;
+  width: 80rpx;
+}
+
+.legend-blue {
+  color: #2980B9;
+  font-weight: bold;
+  width: 80rpx;
+}
+
+.legend-mark {
+  color: #2980B9;
+  width: 80rpx;
+  text-align: center;
+}
+
+.legend-ma {
+  color: #27AE60;
+  font-weight: bold;
+  width: 80rpx;
+  text-align: center;
+}
+
+.legend-text {
+  color: #666;
+  flex: 1;
+}
+
+/* 返回按钮 */
+.btn-back {
+  width: 100%;
+  margin: 30rpx 0;
+}

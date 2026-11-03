@@ -1,0 +1,35 @@
+<!--pages/about/about.wxml-->
+<view class="container">
+  <view class="card about-card">
+    <view class="about-title">关于奇门遁甲排盘</view>
+
+    <view class="about-section">
+      <text class="about-heading">排盘方法</text>
+      <text class="about-text">本程序采用转盘奇门遁甲时家排盘法，依据传统排盘规则实现：</text>
+      <view class="about-list">
+        <text>• 地盘：阳遁顺飞、阴遁逆飞布三奇六仪</text>
+        <text>• 天盘：值符随时干，九星顺时针排布</text>
+        <text>• 八门：值使随时支，按旬内偏移定落宫</text>
+        <text>• 八神：小值符随大值符，阳顺阴逆排布</text>
+        <text>• 寄宫：采用最常用的寄坤宫法</text>
+      </view>
+    </view>
+
+    <view class="about-section">
+      <text class="about-heading">定局规则</text>
+      <text class="about-text">采用超接/拆补法定局，以符头日干支确定上中下三元。</text>
+    </view>
+
+    <view class="about-section">
+      <text class="about-heading">免责声明</text>
+      <text class="about-text">本程序仅供传统文化学习研究使用，排盘结果仅供参考，不构成任何决策建议。</text>
+    </view>
+
+    <view class="about-section">
+      <text class="about-heading">版本信息</text>
+      <text class="about-text">版本：1.0.0</text>
+    </view>
+  </view>
+
+  <button class="btn-primary" open-type="share">分享给好友</button>
+</view>

@@ -1,0 +1,231 @@
+{
+  "id": "qimen_20260610_2200",
+  "datetime": "2026-06-10T22:00:00",
+  "pan": {
+    "chart_info": {
+      "time": "丙午年 甲午月 乙卯日 丁亥时",
+      "jieqi": "芒种",
+      "dun": "阳",
+      "bureau": "阳遁3局",
+      "yuan": "中元",
+      "xun_shou_gan": "庚",
+      "zhi_fu_star": "天禽",
+      "zhi_fu_pos": 5,
+      "zhi_fu_heaven_pos": 9,
+      "zhi_shi_door": "死门",
+      "zhi_shi_pos": 8,
+      "kong_pair": [
+        "午",
+        "未"
+      ],
+      "kong_palaces": [
+        9,
+        2
+      ],
+      "ma_zhi": "巳",
+      "ma_palace": 4
+    },
+    "di_pan": {
+      "3": "戊",
+      "4": "己",
+      "5": "庚",
+      "6": "辛",
+      "7": "壬",
+      "8": "癸",
+      "9": "丁",
+      "1": "丙",
+      "2": "乙"
+    },
+    "earth_jigan": {
+      "2": "庚"
+    },
+    "hv_stems": {
+      "9": "乙",
+      "2": "壬",
+      "7": "辛",
+      "6": "丙",
+      "1": "癸",
+      "8": "戊",
+      "3": "己",
+      "4": "丁",
+      "5": "壬"
+    },
+    "jigan_stems": {
+      "9": "庚"
+    },
+    "hv_stars": {
+      "1": "天任",
+      "2": "天柱",
+      "3": "天辅",
+      "4": "天英",
+      "5": "天柱",
+      "6": "天蓬",
+      "7": "天心",
+      "8": "天冲",
+      "9": "天芮"
+    },
+    "hv_stars_jigan": {
+      "9": "天禽"
+    },
+    "palace_doors": {
+      "8": "死门",
+      "3": "惊门",
+      "4": "开门",
+      "9": "休门",
+      "2": "生门",
+      "7": "伤门",
+      "6": "杜门",
+      "1": "景门",
+      "5": "生门"
+    },
+    "palace_gods": {
+      "9": "值符",
+      "2": "腾蛇",
+      "7": "太阴",
+      "6": "六合",
+      "1": "白虎",
+      "8": "玄武",
+      "3": "九地",
+      "4": "九天",
+      "5": "腾蛇"
+    },
+    "earth_gods": {
+      "2": "值符",
+      "7": "腾蛇",
+      "6": "太阴",
+      "1": "六合",
+      "8": "白虎",
+      "3": "玄武",
+      "4": "九地",
+      "9": "九天",
+      "5": "值符"
+    }
+  },
+  "pan_summary": {
+    "dun_type": "阳遁",
+    "bureau_num": 3,
+    "zhi_fu": {
+      "star": "天禽",
+      "origin_palace": 5,
+      "heaven_palace": 9
+    },
+    "zhi_shi": {
+      "door": "死门",
+      "palace": 8
+    },
+    "kong_palaces": [
+      9,
+      2
+    ],
+    "ma_palace": 4,
+    "palaces": [
+      {
+        "palace": 1,
+        "dir": "坎",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 2,
+        "dir": "坤",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡"
+      },
+      {
+        "palace": 3,
+        "dir": "震",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 4,
+        "dir": "巽",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "驿马"
+      },
+      {
+        "palace": 6,
+        "dir": "乾",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 7,
+        "dir": "兑",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": ""
+      },
+      {
+        "palace": 8,
+        "dir": "艮",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "值使宫"
+      },
+      {
+        "palace": 9,
+        "dir": "离",
+        "di_gan": "",
+        "tian_gan": "",
+        "star": "",
+        "door": "",
+        "god": "",
+        "jigan": null,
+        "note": "空亡，天盘值符宫"
+      }
+    ]
+  },
+  "context": {
+    "market": "沪镍期货",
+    "time_range": "",
+    "direction": "",
+    "specific_target": "",
+    "notes": ""
+  },
+  "analysis": "（请填写分析过程）",
+  "outcome": {
+    "predicted": "",
+    "actual": "",
+    "accuracy": "",
+    "key_turning_point": "",
+    "deviation_reason": ""
+  },
+  "insights": "此局整体上看着比较亮眼，值符所在离宫有奇门，巽宫也有奇门，但值符宫有庚金，有空亡；所以能量最强的宫在巽宫，开门，上乘九天，临马星。说明开盘有非常强的上冲行情。此盘中地盘庚金和天盘庚金都是空亡。所以在此盘中，庚金作用发挥不错破坏的作用，但代表开盘时间的第一宫位，21点开盘，有白虎，对应盘面开盘时，低开2000点，但是迅速拉升1000多点，又对应了巽宫的开门吉格",
+  "tags": [],
+  "rating": 0,
+  "created_at": "2026-06-10T21:16:39"
+}

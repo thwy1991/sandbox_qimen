@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+# .dockerignore - 排除不需要的文件
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+logs/
+output/
+*.png
+*.jpg
+*.db
+*.sqlite
+.git/
+.gitignore
+miniprogram/
+docs/
+docs_qimen/
+docs_with_stock/
+tests/
+scripts/
+.codeluddy/

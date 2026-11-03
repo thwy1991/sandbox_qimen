@@ -1,0 +1,101 @@
+/* pages/index/index.wxss */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 0 20rpx;
+}
+
+.title {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #8B4513;
+  letter-spacing: 8rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #A0522D;
+  margin-top: 8rpx;
+  letter-spacing: 4rpx;
+}
+
+.time-card {
+  width: 100%;
+}
+
+.time-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 16rpx 0;
+}
+
+.time-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.time-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.time-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #8B4513;
+  border-bottom: 2rpx solid #D4B996;
+  padding: 4rpx 16rpx;
+  min-width: 60rpx;
+  text-align: center;
+}
+
+.zhi-value {
+  color: #A0522D;
+  font-size: 32rpx;
+}
+
+.current-time {
+  text-align: center;
+  font-size: 26rpx;
+  color: #666;
+  padding: 16rpx 0;
+  border-top: 1rpx solid #E8D5C0;
+  margin-top: 8rpx;
+}
+
+.btn-now {
+  background-color: #D4B996;
+  color: #5C3310;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  padding: 16rpx;
+  margin-top: 16rpx;
+}
+
+.btn-now:active {
+  background-color: #C4A986;
+}
+
+.btn-paipan {
+  width: 100%;
+  margin: 30rpx 0;
+  font-size: 36rpx;
+  padding: 28rpx 0;
+}
+
+.footer {
+  padding: 40rpx 0;
+  text-align: center;
+}
+
+.footer-link {
+  font-size: 26rpx;
+  color: #8B4513;
+  text-decoration: underline;
+}

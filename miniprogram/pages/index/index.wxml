@@ -1,0 +1,65 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 标题 -->
+  <view class="header">
+    <text class="title">奇门遁甲</text>
+    <text class="subtitle">时家排盘</text>
+  </view>
+
+  <!-- 时间选择 -->
+  <view class="card time-card">
+    <view class="section-title">排盘时间</view>
+
+    <view class="time-row">
+      <view class="time-item">
+        <text class="time-label">年</text>
+        <picker mode="selector" range="{{yearList}}" value="{{yearIndex}}" bindchange="onYearChange">
+          <text class="time-value">{{yearList[yearIndex]}}</text>
+        </picker>
+      </view>
+      <view class="time-item">
+        <text class="time-label">月</text>
+        <picker mode="selector" range="{{monthList}}" value="{{monthIndex}}" bindchange="onMonthChange">
+          <text class="time-value">{{monthList[monthIndex]}}</text>
+        </picker>
+      </view>
+      <view class="time-item">
+        <text class="time-label">日</text>
+        <picker mode="selector" range="{{dayList}}" value="{{dayIndex}}" bindchange="onDayChange">
+          <text class="time-value">{{dayList[dayIndex]}}</text>
+        </picker>
+      </view>
+    </view>
+
+    <view class="time-row">
+      <view class="time-item">
+        <text class="time-label">时</text>
+        <picker mode="selector" range="{{hourList}}" value="{{hourIndex}}" bindchange="onHourChange">
+          <text class="time-value">{{hourList[hourIndex]}}</text>
+        </picker>
+      </view>
+      <view class="time-item">
+        <text class="time-label">分</text>
+        <picker mode="selector" range="{{minuteList}}" value="{{minuteIndex}}" bindchange="onMinuteChange">
+          <text class="time-value">{{minuteList[minuteIndex]}}</text>
+        </picker>
+      </view>
+      <view class="time-item">
+        <text class="time-label">辰</text>
+        <text class="time-value zhi-value">{{hourZhi}}时</text>
+      </view>
+    </view>
+
+    <view class="current-time">{{currentDate}}</view>
+
+    <button class="btn-now" bindtap="onNowTap">使用当前时间</button>
+  </view>
+
+  <!-- 排盘按钮 -->
+  <button class="btn-primary btn-paipan" bindtap="onPaipanTap">开始排盘</button>
+
+  <!-- 底部 -->
+  <view class="footer">
+    <text class="footer-link" bindtap="onAboutTap">关于排盘</text>
+  </view>
+</view>

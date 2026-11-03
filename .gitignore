@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# 日志
+logs/
+*.log
+
+# 输出图片
+output/
+*.png
+
+# 数据库
+*.db
+*.sqlite
+
+# IDE
+.vscode/
+.idea/
+
+# CodeBuddy
+.codebuddy/
+
+# 微信开发者工具
+miniprogram/project.private.config.json
+project.private.config.json
+
+# 敏感文件
+.env
+.env.local
+.streamlit/secrets.toml
+
+# 临时文件
+*.tmp
+*.bak
