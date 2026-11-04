@@ -1,7 +1,7 @@
 // app.js
 App({
   globalData: {
-    apiBase: 'http://localhost:5000/api', // 开发环境用本地地址，上线时替换为实际域名
+    apiBase: 'https://qimen-api-339438-7-1522762999.sh.run.tcloudbase.com/api',
     userInfo: null
   },
 
